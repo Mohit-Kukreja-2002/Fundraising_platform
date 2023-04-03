@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 function SignIn() {
-    const host=`http://${process.env.NEXT_PUBLIC_WEB_HOST}:${process.env.NEXT_PUBLIC_WEB_PORT}`
+    // const host=`http://${process.env.NEXT_PUBLIC_WEB_HOST}:${process.env.NEXT_PUBLIC_WEB_PORT}`
+    const host=process.env.NEXT_PUBLIC_DEPLOYED;
     const router=useRouter();
 
     const [logincredentials, setlogincredentials] = useState({ email: "", password: "" });
