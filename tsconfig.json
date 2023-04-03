@@ -30,7 +30,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/api/auth/fetchUser.js", "pages/api/auth/createUser.js"  ],
+, "pages/api/auth/fetchUser.js", "pages/api/auth/createUser.js", "pages/signUp.js"  ],
   "exclude": [
     "node_modules"
   ]

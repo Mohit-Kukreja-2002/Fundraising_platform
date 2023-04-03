@@ -9,9 +9,9 @@ function SignUp(){
 
     const {data:session}=useSession();
     // console.log(session);
-
     // const host=`http://${process.env.NEXT_PUBLIC_WEB_HOST}:${process.env.NEXT_PUBLIC_WEB_PORT}`
-    const host=process.env.NEXT_PUBLIC_DEPLOYED;
+    
+    const host=`${process.env.NEXT_PUBLIC_DEPLOYED}`;
     const router=useRouter();
     const [signupcredentials, setSignupcredentials] = useState({ email: "", password: "", cpassword: "" })
 
