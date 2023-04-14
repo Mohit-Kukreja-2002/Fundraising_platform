@@ -74,3 +74,4 @@ function contactUs() {
 
 
 export default contactUs;
+export default contactUs;
