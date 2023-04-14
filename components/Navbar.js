@@ -16,7 +16,7 @@ function Navbar() {
                         <li className='active:bg-[#9c3353] mr-1 active:text-[#ffc1d3] text-[#212121] hover:bg-[#f5f5f5] px-4 pb-[24.2px] pt-[22px]'><Link href={'/'}>Home</Link></li>
                         <li className='active:bg-[#9c3353] mr-1 active:text-[#ffc1d3] text-[#212121] hover:bg-[#f5f5f5] px-4 pb-[24.2px] pt-[22px]'><Link href={'/'}>Donate</Link></li>
                         <li className='active:bg-[#9c3353] mr-1 active:text-[#ffc1d3] text-[#212121] hover:bg-[#f5f5f5] px-4 pb-[24.2px] pt-[22px]'><Link href={'/'}>Lend</Link></li>
-                        <li className='active:bg-[#9c3353] mr-1 active:text-[#ffc1d3] text-[#212121] hover:bg-[#f5f5f5] px-4 pb-[24.2px] pt-[22px]'><Link href={'/'}>Pricing</Link></li>
+                        <li className='active:bg-[#9c3353] mr-1 active:text-[#ffc1d3] text-[#212121] hover:bg-[#f5f5f5] px-4 pb-[24.2px] pt-[22px]'><Link href={'/contactUs'}>Contact Us</Link></li>
                     </ul>
                 </div>
                 <div className='flex items-center justify-end cursor-pointer w-[30%]'>
