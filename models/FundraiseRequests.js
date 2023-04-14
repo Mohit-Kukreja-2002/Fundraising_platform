@@ -5,6 +5,7 @@ const FundraiseRequestsSchema = new Schema({
     img:{type:String},
     includeTaxBenefit:{type: Boolean,required:true},
     amountRequired:{type: Number,required:true},
+    category:{type:String},
     amountRaised:{type: Number,default: 0},
     createdBy:{type: String,required:true},
     benefiter:{type: String,required:true},
