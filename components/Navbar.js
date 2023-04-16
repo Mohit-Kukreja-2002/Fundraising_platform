@@ -6,7 +6,7 @@ import { MdOutlineAccountCircle } from 'react-icons/md'
 
 function Navbar({ page, count }) {
     return (
-        <nav className={`block bg-white ${page==="landing"?"fixed":""} top-0 w-[100%] z-[1000000]`}>
+        <nav className={`block bg-white ${page==="landing" || "donate"?"fixed":""} top-0 w-[100%] z-[1000000]`}>
             <div className="bg-white flex items-center h-[70px] shadow-[0_0_30px_0_rgba(156,51,83,.2)] sticky top-0 z-[1000] box-border w-[100%]">
                 <div className='w-[12%]'>
                     <Link href={'/'}>

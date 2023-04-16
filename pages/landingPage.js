@@ -13,7 +13,7 @@ function LandingPage() {
     const percentage = 90
     return (
         <>
-            <Navbar page={"landing"}/>
+            <Navbar page={"landing"} />
             <div className='mt-[80px]'>
                 <div className="flex items-center justify-center font-sans">
                     <div className='mt-[-10px] mx-auto ml-[150px] w-[40%]'>
@@ -64,37 +64,33 @@ function LandingPage() {
 
                 {/* Cards */}
                 <div className='relative flex flex-wrap mx-[130px] justify-between'>
-                    <div className="cursor-pointer mx-3 mb-5 h-[530px] hover:shadow-[0_0_20px_0_rgba(156,51,83,0.3)] shadow-[0_0_30px_0_rgba(156,51,83,0.2)] w-[30%] bg-white border border-gray-200 rounded-lg relative">
-                        <div className="absolute top-0 left-[-5px] px-2 py-1 bg-[#9c3353] text-white rounded-tr-lg rounded-bl-lg transform overflow-hidden">Tax Benefit</div>
-                        <a href="#">
-                            <img className="w-[100%] rounded-t-lg" src="https://cimages.milaap.org/milaap/image/upload/c_fill,h_452,w_603/v1679944130/production/images/campaign/639821/A7852872-9C10-4830-9813-12066662E039_ahi9m1_1679944133.jpg" alt="" />
-                        </a>
-                        <div className="px-5 mb-5 h-[50px] mt-[20px]">
-                            <a href="#">
-                                <h5 className="h-[50px] text-[1.3rem] font-[500] tracking-tight text-gray-500">Help my friend Gowriprasath TT fight RTA - Traumatic Brain Injury</h5>
-                            </a>
-                        </div>
 
-                        <div className='flex pl-5 h-[90px]'>
-                            <div>
-                                <CircularProgressBar percentage={percentage} />
+                    <div className="cursor-pointer mx-3 mb-5 h-[530px] hover:shadow-[0_0_20px_0_rgba(156,51,83,0.3)] shadow-[0_0_30px_0_rgba(156,51,83,0.2)] w-[30%] bg-white border border-gray-200 rounded-lg relative">
+                        <Link href={'/fundraiser/temp'}>
+                            <div className="absolute top-0 left-[-5px] px-2 py-1 bg-[#9c3353] text-white rounded-tr-lg rounded-bl-lg transform overflow-hidden">Tax Benefit</div>
+                            <img className="w-[100%] rounded-t-lg" src="https://cimages.milaap.org/milaap/image/upload/c_fill,h_452,w_603/v1679944130/production/images/campaign/639821/A7852872-9C10-4830-9813-12066662E039_ahi9m1_1679944133.jpg" alt="" />
+                            <div className="px-5 mb-5 h-[50px] mt-[20px]">
+                                <h5 className="h-[50px] text-[1.3rem] font-[500] tracking-tight text-gray-500">Help my friend Gowriprasath TT fight RTA - Traumatic Brain Injury</h5>
                             </div>
-                            <div className='mt-4'>
-                                <p className='text-[#71737B] text-sm font-bold'>Raised</p>
-                                <p className='mt-1 text-xl'>₹123456</p>
-                            </div>
-                            <div className='relative flex mx-auto before:bg-[#dde0e0] before:content-[""] before:absolute before:h-[30%] before:w-[2px] before:left-[-12px] before:top-[26px]'>
-                                <div className='mt-5'>
-                                    <p className='text-[#71737B] text-xs'>Created By</p>
-                                    <p className='mt-1 text-[#53545a] text-sm'>Mohit</p>
+
+                            <div className='flex pl-5 h-[90px]'>
+                                <div> <CircularProgressBar percentage={percentage} /> </div>
+                                <div className='mt-4'>
+                                    <p className='text-[#71737B] text-sm font-bold'>Raised</p>
+                                    <p className='mt-1 text-xl'>₹123456</p>
+                                </div>
+                                <div className='relative flex mx-auto before:bg-[#dde0e0] before:content-[""] before:absolute before:h-[30%] before:w-[2px] before:left-[-12px] before:top-[26px]'>
+                                    <div className='mt-5'>
+                                        <p className='text-[#71737B] text-xs'>Created By</p>
+                                        <p className='mt-1 text-[#53545a] text-sm'>Mohit</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className='ml-5 mr-6 bg-[#f7f7f7] h-[55px] text-[#2b2b35] p-2'>
-                            <p className='relative before:absolute before:content-[""] before:bg-[#691a47] text-sm ml-2 before:h-[136%] before:top-[-8px] before:w-[4px] before:left-[-16px]'>Recieve Tax benefit by contributing to this cause.</p>
-
-                        </div>
+                            <div className='ml-5 mr-6 bg-[#f7f7f7] h-[55px] text-[#2b2b35] p-2'>
+                                <p className='relative before:absolute before:content-[""] before:bg-[#691a47] text-sm ml-2 before:h-[136%] before:top-[-8px] before:w-[4px] before:left-[-16px]'>Recieve Tax benefit by contributing to this cause.</p>
+                            </div>
+                        </Link>
                     </div>
                     <div className="mx-3 mb-5 h-[530px] hover:shadow-[0_0_20px_0_rgba(156,51,83,0.3)] shadow-[0_0_30px_0_rgba(156,51,83,0.2)] w-[30%] bg-white border border-gray-200 rounded-lg relative">
                         <div className="absolute top-0 left-[-5px] px-2 py-1 bg-[#9c3353] text-white rounded-tr-lg rounded-bl-lg transform overflow-hidden">Tax Benefit</div>
@@ -161,15 +157,16 @@ function LandingPage() {
                         </div>
                     </div>
                 </div>
-                
+
+                {/* Request a call */}
                 <div className='bg-[linear-gradient(264deg,#9c3353,#5f2747)] text-[#5d5d5d] text-[14px] leading-[1.5] font-[400] w-[100%] mb-10'>
                     <div className='rounded-[6px] bg-floral-pattern bg-no-repeat p-[29px_0]'>
                         <div className='text-center m-[0_auto] bg-[#fff] rounded-[9px] p-[18px_0] w-[85%] max-w-[1280px] '>
                             <div className='flex items-center justify-center'>
                                 <p className='text-[#212121] text-[30px] mr-[15px] m-[24px_0_17px]'>Need help to setup your free fundraiser?</p>
-                                <button className='h-[45px] leading-[45px] inline-block w-[250px] m-[0_2px_24px] mb-[0] text-[18px] transition-colors delay-[0.2s] ease bg-[#9c3353] text-white rounded-full shadow-[0_0_6px_0_rgba(156,51,83,.2)] hover:shadow-[0_0_8px_0_rgba(156,51,83,.4)] '> 
+                                <button className='h-[45px] leading-[45px] inline-block w-[250px] m-[0_2px_24px] mb-[0] text-[18px] transition-colors delay-[0.2s] ease bg-[#9c3353] text-white rounded-full shadow-[0_0_6px_0_rgba(156,51,83,.2)] hover:shadow-[0_0_8px_0_rgba(156,51,83,.4)] '>
                                     <span className='flex items-center justify-center'>
-                                        <MdOutlineCall className='h-[24px] w-[24px] mr-[11px] ' size={25}/>
+                                        <MdOutlineCall className='h-[24px] w-[24px] mr-[11px] ' size={25} />
                                         <span className='text-[20px]'>Request a call</span>
                                     </span>
                                 </button>
@@ -178,6 +175,7 @@ function LandingPage() {
                     </div>
                 </div>
 
+                {/* Contact Us */}
                 <div className='bottom-0 right-[70px] fixed z-[1000000] '>
                     <Link href={'/contactUs'} className='px-2 flex text-[18px] justify-evenly items-center text-white rounded-[5px_5px_0_0] w-[140px] h-[50px] bg-[#9c3353] shadow-[0_2px_1px_0_rgba(156,51,83,.3098)] normal-case leading-[32.4px] '>
                         <img className='py-1 w-[30px]' src="https://assets-give.milaap.org/assets/support/support-026639827351db2f76f01cb2405a636907a4b4ea56506f138364b541f9518a4d.png" alt="" />
@@ -185,6 +183,7 @@ function LandingPage() {
                     </Link>
                 </div>
 
+                {/* Footer */}
                 <div className='flex bg-[#212121] w-[100%] text-white justify-center'>
                     <Link href={"/"} className='px-3 py-4 text-sm'>Security & Privacy</Link>
                     <Link href={"/"} className='px-3 py-4 text-sm'>Conditions of use</Link>

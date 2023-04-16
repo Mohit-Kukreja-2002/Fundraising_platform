@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 
-const CircularProgressBar = ({ percentage }) => {
+const CircularProgressBar = ({ percentage,size=13 }) => {
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
-    const circumference = 2 * Math.PI * 16;
+    const circumference = 2 * Math.PI * size;
     const progressOffset = circumference - (percentage / 100) * circumference;
     setOffset(progressOffset);
   }, [percentage]);
@@ -13,11 +13,11 @@ const CircularProgressBar = ({ percentage }) => {
     <div className="relative inline-block">
       <div className="w-20 h-20 overflow-hidden text-center align-middle">
         <svg className="absolute transform -rotate-90" viewBox="0 0 36 36">
-          <circle className="text-[#E8E4E4] stroke-current" cx="18" cy="18" r="13" strokeWidth="4" fill="none"></circle>
+          <circle className="text-[#E8E4E4] stroke-current" cx="18" cy="18" r={`${size}`} strokeWidth="4" fill="none"></circle>
           <circle
-            className="text-[#37d123] stroke-current" cx="18" cy="18" r="13" strokeWidth="4"
+            className="text-[#37d123] stroke-current" cx="18" cy="18" r={`${size}`} strokeWidth="4"
             fill="none"
-            style={{ strokeDasharray: `${2 * Math.PI * 13}px`, strokeDashoffset: `${offset}px` }}
+            style={{ strokeDasharray: `${2 * Math.PI * size }px`, strokeDashoffset: `${offset}px` }}
           ></circle>
         </svg>
         
