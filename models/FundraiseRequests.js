@@ -1,14 +1,36 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const FundraiseRequestsSchema = new Schema({
-    title:{type: String,required:true},
-    img:{type:String},
-    includeTaxBenefit:{type: Boolean,required:true},
-    amountRequired:{type: Number,required:true},
-    category:{type:String},
-    amountRaised:{type: Number,default: 0},
+    verified:{type: Boolean,default:false},
+    slug:{type: String,unique:true},
+    donators:[],
+    category:{type:String,required:true},
+
     createdBy:{type: String,required:true},
-    benefiter:{type: String,required:true},
-    story:{type: String},
+    creatorMail:{type: String,required:true},
+    creatorImg:{type:String},
+    
+    benefitterCreatorRelation:{type:String},
+    
+    benefitterName:{type: String,required:true},
+    benefitterAge:{type: Number,required:true},
+    benefitterGender:{type: String},
+    benefitterAddress:{type: String,required:true},
+    benefitterContact:{type: String,required:true},
+
+    amountRequired:{type: String,required:true},
+    amountRaised:{type: Number,default: 0},
+
+    endDateToRaise:{type: Date,required:true},
+    includeTaxBenefit:{type: Boolean,required:true},
+
+    hospitalName:{type:String,required:true},
+    hospitalLocation:{type:String,required:true},
+    ailment:{type:String,required:true},
+
+    coverImg:{type:String,required:true},
+    fundraiserTitle:{type: String,required:true},
+    fundraiserStory:{type: String},
+
 },{timestamps:true});
 export default mongoose.models.FundraiseRequests || mongoose.model('FundraiseRequests', FundraiseRequestsSchema);

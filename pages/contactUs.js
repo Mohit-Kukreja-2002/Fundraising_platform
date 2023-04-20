@@ -3,12 +3,13 @@ import { BsFillTelephoneFill } from 'react-icons/bs'
 import { AiFillMail } from 'react-icons/ai'
 import { HiLocationMarker } from 'react-icons/hi'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 function contactUs() {
     return (
         <>
-            <Navbar page={"landing"}/>
-            <div className="mt-[60px]">
+            <Navbar navtype={"landing"} subpage={"contact"}/>
+            <div className="mt-[64px]">
                 <div className="flex items-center justify-center font-sans bg-contact bg-[#9c3353] pt-32 pb-20">
                     <div className='flex flex-col justify-center w-3/6 pl-40 '>
                         <h1 className='text-[#ffffff] font-bold text-3xl'>Contact Us</h1>
@@ -53,11 +54,11 @@ function contactUs() {
                         <div class="grid md:grid-cols-2 md:gap-6">
                             <div class="relative z-0 w-4/6 mb-6 group">
                                 <input type="text" name="name" id="name" className="block py-2.5 px-0 w-full text-lg text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                                <label for="name" className="peer-focus:font-medium absolute text-lg text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
+                                <label htmlFor="name" className="peer-focus:font-medium absolute text-lg text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
                             </div>
                             <div class="relative z-0 w-4/6 mb-6 group">
                                 <input type="mail" name="mail" id="mail" className="block py-2.5 px-0 w-full text-lg text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none 600 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-                                <label for="mail" className="peer-focus:font-medium absolute text-lg text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
+                                <label hmtlFor="mail" className="peer-focus:font-medium absolute text-lg text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email address</label>
                             </div>
                         </div>
                         <div>
@@ -68,6 +69,7 @@ function contactUs() {
                     </form>
                 </div>
             </div>
+            <Footer/>
         </>
     )
 }

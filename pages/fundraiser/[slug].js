@@ -1,22 +1,52 @@
-import { useState } from "react";
+import { useRef, useState,useEffect } from "react";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import Navbar from "../../components/Navbar";
 import { BsWhatsapp, BsFacebook } from 'react-icons/bs';
 import { FaHandsHelping } from 'react-icons/fa';
 import Link from "next/link";
 import Image from "next/image";
+import Footer from "../../components/Footer";
+import mongoose from 'mongoose'
+import FundraiseRequests from "../../models/FundraiseRequests";
 
-const Post = () => {
+const Post = ({ fundraiserDetails }) => {
+    // const { finaldata } = props;
+    console.log(fundraiserDetails);
+    const ref = useRef(null)
+
+    // const handleScroll = () => {
+    //     const element = ref.current;
+    //     const distanceFromBottom = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+    //     if (distanceFromBottom <= 300) {
+    //         element.classList.remove('fixed');
+    //     } else {
+    //         element.classList.add('fixed');
+    //     }
+    // }
+    useEffect(() => {
+        const handleScroll = () => {
+            const element = ref.current;
+            const distanceFromBottom = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+            if (distanceFromBottom <= 300) {
+                element.classList.remove('fixed');
+            } else {
+                element.classList.add('fixed');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const [storyUpdate, setstoryUpdate] = useState("story");
 
     return (
         <>
-            <Navbar page={"donate"} />
+            <Navbar navtype={"landing"} subpage={"donate"} />
             <div className="flex my-[74px]">
 
                 {/* Left Box */}
-                <div className="w-[577px] ml-[15%]">
+                <div className="w-[577px] ml-[18%]">
                     {/* Label */}
                     <div className="bg-[#f3f3f3] rounded-[0_0_4px_4px] text-[#212121] p-[10px] text-center text-[14px] w-full leading-[22px] ">
                         Hopefund will not charge any fee on your donation to this fundraiser.
@@ -24,7 +54,7 @@ const Post = () => {
 
                     {/* Title */}
                     <div className="m-[20px_0_10px] text-[#212121] p-[3px_10px_10px]  pl-0 text-[24px] w-full leading-[33px] ">
-                        Help Me Get A Lifesaving Liver Transplant And Post Transplant Care
+                        {fundraiserDetails.fundraiserTitle}
                     </div>
 
                     {/* Image here */}
@@ -35,11 +65,11 @@ const Post = () => {
                     {/* progess Bar  and etc */}
                     <div className='flex h-[90px] mt-4'>
                         <div>
-                            <CircularProgressBar percentage={20} />
+                            <CircularProgressBar percentage={Math.ceil(100 * (fundraiserDetails.amountRaised / fundraiserDetails.amountRequired))} />
                         </div>
                         <div className='mt-4'>
                             <p className='text-[#5d5d5d] text-sm font-bold'>Raised</p>
-                            <p className='mt-1'><span className="text-xl font-bold text-[#9c3353]">₹123456</span> out of ₹1234567</p>
+                            <p className='mt-1'><span className="text-xl font-bold text-[#9c3353]">₹{fundraiserDetails.amountRaised}</span> out of ₹{fundraiserDetails.amountRequired}</p>
                         </div>
                         <div className='relative mt-5 ml-auto mr-2 text-[#691a47]'>
                             <p className="text-xl cursor-pointer bg-[#f3f3f3] p-[0_15px] leading-[40px] font-[500] underline rounded-2xl">233 supporters</p>
@@ -64,29 +94,29 @@ const Post = () => {
                             <p className="ml-3 relative bg-[#9c3353] text-[22px] rounded-full h-16 w-16 text-white after:absolute after:content-['V'] after:top-4 after:left-6 "></p>
                             <ul className="ml-4">
                                 <li className="text-sm text-[#5d5d5d]">Created by</li>
-                                <li className="text-[18px] font-[500] text-[#212121]">Mohit</li>
+                                <li className="text-[18px] font-[500] text-[#212121]">{fundraiserDetails.createdBy}</li>
                             </ul>
                         </div>
                         <div className="p-2 flex ml-4 right-0 w-[52%] rounded-[4px] border-[1px] border-solid border-[#e0e1e3] items-center justify-start ">
                             <p className="ml-3 relative bg-[#9c3353] text-[22px] rounded-full h-16 w-16 text-white after:absolute after:content-['V'] after:top-4 after:left-6 "></p>
                             <ul className="ml-4">
                                 <li className="text-sm mb-1 text-[#5d5d5d]">This fundraiser will benefit</li>
-                                <li className="text-[18px] mb-1 font-[500] text-[#212121]">Random</li>
-                                <li className="text-sm text-[#5d5d5d]">from Hokido, Japan</li>
+                                <li className="text-[18px] mb-1 font-[500] text-[#212121]">{fundraiserDetails.benefitterName}</li>
+                                <li className="text-sm text-[#5d5d5d]">from {fundraiserDetails.benefitterAddress}</li>
                             </ul>
                         </div>
                     </div>
 
                     {/* Story Update handler */}
                     <div className="flex mb-6 text-center">
-                        <button className={`w-full ${storyUpdate === "story" ? "font-bold text-white bg-[#9c3353] " : " text-[#212121] bg-white"} rounded-[30px_0_0_30px] text-[18px] border-[1px] border-solid border-[#9c3353] leading-[50px]`}>Story</button>
-                        <button className={`w-full ${storyUpdate === "update" ? "font-bold text-white bg-[#9c3353] " : " text-[#212121] bg-white"} rounded-[0px_30px_30px_0px] text-[18px] border-[1px] border-solid border-[#9c3353] leading-[50px]`}>Update</button>
+                        <button onClick={()=>{setstoryUpdate("story")}} className={`w-full ${storyUpdate === "story" ? "font-bold text-white bg-[#9c3353] " : " text-[#212121] bg-white"} rounded-[30px_0_0_30px] text-[18px] border-[1px] border-solid border-[#9c3353] leading-[50px]`}>Story</button>
+                        <button onClick={()=>{setstoryUpdate("update")}} className={`w-full ${storyUpdate === "update" ? "font-bold text-white bg-[#9c3353] " : " text-[#212121] bg-white"} rounded-[0px_30px_30px_0px] text-[18px] border-[1px] border-solid border-[#9c3353] leading-[50px]`}>Update</button>
                     </div>
 
                     {/* Story */}
                     <div className="tracking-wider text-[#3a3a3a] leading-6">
                         <div>
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus reprehenderit, rerum exercitationem praesentium explicabo quia iste esse quae maiores, itaque nihil! Aut voluptatibus mollitia adipisci repudiandae. Facilis ullam labore voluptas ipsum culpa delectus reiciendis temporibus rem, similique quidem molestiae dolorem facere sit repellat maxime suscipit asperiores obcaecati et nam odit odio corrupti! Ab corporis, iste expedita beatae ducimus laudantium a rerum hic quod eveniet. Labore ab dicta dolores, exercitationem quis adipisci tempora, in quas, totam ipsum illo quibusdam aspernatur recusandae! Recusandae ad blanditiis distinctio doloribus neque aliquam, omnis rerum minima dolorum facilis officia optio hic, soluta minus? Ut aut repudiandae, repellat assumenda velit odio ipsum consequuntur facere sapiente dolor autem dolore sequi illo, enim itaque fuga, voluptatem aliquam temporibus alias eius! Quam animi exercitationem soluta doloribus ipsum, ratione veniam veritatis delectus saepe accusantium, ducimus quos. Repellat veniam numquam aperiam necessitatibus maxime quos, dicta libero voluptatum dignissimos, accusantium, blanditiis deserunt ipsa earum rerum! Dolores aut et deleniti? Culpa praesentium deleniti ut nostrum voluptatum ducimus quisquam sit optio excepturi doloremque hic velit sint esse exercitationem consectetur, enim numquam? Perspiciatis incidunt vel tempore eaque eos! Autem omnis, animi inventore exercitationem impedit odio totam alias ratione dignissimos dolore enim reiciendis, obcaecati esse cupiditate deleniti!
+                            {fundraiserDetails.fundraiserStory}
                         </div>
                     </div>
 
@@ -100,7 +130,7 @@ const Post = () => {
                 </div>
 
                 {/* right box */}
-                <div className="fixed right-[17%] ">
+                <div ref={ref} className={`transition-transform duration-10000 fixed right-[14%] `}>
                     <div className="pt-3 mx-8 top-0 sticky w-[390px] bg-[#f7f7f7] shadow-[-7px_-2px_14px_0_rgba(150,51,83,0.28)]">
                         {/*Donate*/}
                         <div className="flex m-[0_30px] ">
@@ -113,11 +143,11 @@ const Post = () => {
 
                         <div className='flex m-[0_30px] h-[85px] my-3'>
                             <div>
-                                <CircularProgressBar size={16} percentage={10} />
+                                <CircularProgressBar size={16} percentage={Math.ceil(100 * (fundraiserDetails.amountRaised / fundraiserDetails.amountRequired))} />
                             </div>
                             <div className='mt-4 ml-5'>
                                 <p className='text-[#696969] text-[14px] font-bold'>Raised</p>
-                                <p className='mt-1 text-[17px]'><span className="text-xl font-[400] text-[#9c3353]">₹123456</span> out of ₹1234567</p>
+                                <p className='mt-1 text-[17px]'><span className="text-xl font-[400] text-[#9c3353]">₹{fundraiserDetails.amountRaised}</span> out of ₹{fundraiserDetails.amountRequired}</p>
                             </div>
                         </div>
 
@@ -160,16 +190,25 @@ const Post = () => {
                                 <li>
                                     <Image src={'/assets/paypal.png'} className="object-contain rounded-full border-solid border-[4px] border-[#ffdba6] " alt="/" width={40} height={40} />
                                 </li>
-
                             </ul>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
+            <Footer />
         </>
     );
+}
+
+export async function getServerSideProps(context) {
+    if (!mongoose.connections[0].readystate) {
+        await mongoose.connect(process.env.MONGO_URI);
+    }
+
+    let fundraiserDetails = await FundraiseRequests.findOne({ slug: context.query.slug });
+
+    return {
+        props: { fundraiserDetails: JSON.parse(JSON.stringify(fundraiserDetails)) }, // will be passed to the page component as props
+    };
 }
 export default Post;
