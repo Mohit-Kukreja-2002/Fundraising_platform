@@ -11,6 +11,10 @@ import { BsThreeDots, BsFillTelephoneFill } from 'react-icons/bs'
 import { CgOrganisation } from 'react-icons/cg'
 import { RiStethoscopeLine } from 'react-icons/ri';
 import { MdEdit } from 'react-icons/md'
+import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from 'next/router';
+import 'react-toastify/dist/ReactToastify.css';
+
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -19,30 +23,43 @@ const SetupFundraiser = () => {
     // Variables
     const divref = useRef(null);
     const inputRef = useRef(null);
+    const router = useRouter();
+
 
     const [cause, setCause] = useState("medical");
     const [selectedImage, setSelectedImage] = useState(null);
     const [count, setCount] = useState(1);
     const [value, setValue] = useState('');
     const [benefitter, setBenefitter] = useState("");
-    const [details, setdetails] = useState({ category: cause, createdBy: "", creatorMail: "", creatorImg: "", benefitterCreatorRelation: benefitter, benefitterName: "", benefitterAge: "", benefitterGender: "Male", benefitterAddress: "", benefitterContact: "", amountRequired: "", amountRaised: 0, endDateToRaise: "", includeTaxBenefit: true, hospitalName: "", hospitalLocation: "", ailment: "", coverImg: "h", fundraiserTitle: "h", fundraiserStory: "" });
 
-    useEffect(() => {
-        // details.category = cause;
-        console.log("useEffect running")
-    }, [cause, count])
+    const [category, setCategory] = useState(cause);
+    const [createdBy, setCreatedBy] = useState("");
+    const [creatorMail, setCreatorMail] = useState("");
+    const [creatorImg, setCreatorImg] = useState("");
+    const [benefitterCreatorRelation, setBenefitterCreatorRelation] = useState(benefitter);
+    const [benefitterName, setBenefitterName] = useState("");
+    const [benefitterAge, setBenefitterAge] = useState("");
+    const [benefitterGender, setBenefitterGender] = useState("Not Applicable");
+    const [benefitterAddress, setBenefitterAddress] = useState("");
+    const [benefitterContact, setBenefitterContact] = useState("");
+    const [amountRequired, setAmountRequired] = useState("");
+    const [amountRaised, setAmountRaised] = useState(0);
+    const [endDateToRaise, setEndDateToRaise] = useState("");
+    const [includeTaxBenefit, setIncludeTaxBenefit] = useState("false");
+    const [hospitalName, setHospitalName] = useState("");
+    const [hospitalLocation, setHospitalLocation] = useState("");
+    const [ailment, setAilment] = useState("");
+    const [coverImg, setCoverImg] = useState("ok");
+    const [fundraiserTitle, setFundraiserTitle] = useState("");
+    const [fundraiserStory, setFundraiserStory] = useState("");
 
+    useEffect(() => { }, [cause])
 
-    const handleClick = () => {
-        inputRef.current.click();
-    };
+    const handleClick = () => { inputRef.current.click(); };
 
-    const handleCauseChange = (value) => {
-        setCause(value);
-    };
+    const handleCauseChange = (value) => { setCause(value); };
 
     const handleBenefitterChange = (e, value) => {
-        console.log("hello");
         e.preventDefault();
         setBenefitter(value);
         divref.current.classList.remove("block");
@@ -70,38 +87,133 @@ const SetupFundraiser = () => {
         }
     };
 
-    const handleChange = (content, delta, source, editor, e) => {
-        changing(e);
-        setValue(content);
+
+    const handleCategoryChange = (event) => {
+        setCategory(event.target.value);
+    }
+    const handleCreatedByChange = (event) => {
+        setCreatedBy(event.target.value);
+    }
+    const handleCreatorMailChange = (event) => {
+        setCreatorMail(event.target.value);
+    }
+    const handleCreatorImgChange = (event) => {
+        setCreatorImg(event.target.value);
+    }
+    const handleBenefitterCreatorRelationChange = (event) => {
+        setBenefitterCreatorRelation(event.target.value);
+    }
+    const handleBenefitterNameChange = (event) => {
+        setBenefitterName(event.target.value);
     }
 
-    const changing = (e) => {
-        console.log(details);
-        setdetails({ ...details, [e.target.name]: e.target.value });
+    const handleBenefitterAgeChange = (event) => {
+        setBenefitterAge(event.target.value);
+    }
+    const handleBenefitterGenderChange = (event) => {
+        setBenefitterGender(event.target.value);
+    }
+    const handleBenefitterAddressChange = (event) => {
+        setBenefitterAddress(event.target.value);
+    }
+    const handleBenefitterContactChange = (event) => {
+        setBenefitterContact(event.target.value);
+    }
+    const handleAmountRequiredChange = (event) => {
+        setAmountRequired(event.target.value);
+    }
+    const handleAmountRaisedChange = (event) => {
+        setAmountRaised(event.target.value);
+    }
+    const handleEndDateToRaiseChange = (event) => {
+        setEndDateToRaise(event.target.value);
+    }
+    const handleIncludeTaxBenefitChange = (event) => {
+        setIncludeTaxBenefit(event.target.value);
+    }
+    const handleHospitalLocationChange = (event) => {
+        setHospitalLocation(event.target.value);
+    }
+    const handleHospitalNameChange = (event) => {
+        setHospitalName(event.target.value);
+    }
+    const handleAilmentChange = (event) => {
+        setAilment(event.target.value);
+    }
+    const handleCoverImgChange = (event) => {
+        setCoverImg(event.target.value);
+    }
+    const handleFundraiserTitleChange = (event) => {
+        setFundraiserTitle(event.target.value);
     }
 
-    const host=`${process.env.NEXT_PUBLIC_DEPLOYED}`;
+    const host = `${process.env.NEXT_PUBLIC_DEPLOYED}`;
 
     const handleSubmit = async (e) => {
-        setdetails(cause, details.createdBy, details.creatorMail, details.creatorImg, benefitter, details.benefitterName, details.benefitterAge, details.benefitterGender, details.benefitterAddress, details.benefitterContact, details.amountRequired, details.amountRaised, details.endDateToRaise, details.includeTaxBenefit, details.hospitalName, details.hospitalLocation, details.ailment, details.coverImg, details.fundraiserTitle, details.fundraiserStory);
+        console.log("clicked")
+        try {
+            const response = await fetch(`${host}/api/setupfund/createRequest`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ category: cause, createdBy: createdBy, creatorMail: creatorMail, creatorImg: creatorImg, benefitterCreatorRelation: benefitter, benefitterName: benefitterName, benefitterAge: benefitterAge, benefitterGender: benefitterGender, benefitterAddress: benefitterAddress, benefitterContact: benefitterContact, amountRequired: amountRequired, amountRaised: amountRaised, endDateToRaise: endDateToRaise, includeTaxBenefit: includeTaxBenefit, hospitalName: hospitalName, hospitalLocation: hospitalLocation, ailment: ailment, coverImg: coverImg, fundraiserTitle: fundraiserTitle, fundraiserStory: fundraiserStory }),
+            });
+            const json = await response.json();
+            console.log("Processing the fundraise request", json);
+            e.preventDefault();
 
-        const response = await fetch(`${host}/api/setupfund/createRequest`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(details)
-        });
-        const json=await response.json();
-        console.log("Processing the fundraise request", json);
-        // e.preventDefault();
-        setdetails({ category: "", createdBy: "", creatorMail: "", creatorImg: "", benefitterCreatorRelation: "", benefitterName: "", benefitterAge: "", benefitterGender: "", benefitterAddress: "", benefitterContact: "", amountRequired: "", amountRaised: 0, endDateToRaise: "", includeTaxBenefit: "", hospitalName: "", hospitalLocation: "", ailment: "", coverImg: "", fundraiserTitle: "", fundraiserStory: "" });
+            setCategory(cause); setCreatedBy(""); setCreatorMail(""); setCreatorImg("");
+            setBenefitterCreatorRelation(benefitter); setBenefitterName(""); setBenefitterAge("");
+            setBenefitterGender("Not Applicable"); setBenefitterAddress(""); setBenefitterContact("");
+            setAmountRaised(0); setAmountRequired(""); setEndDateToRaise("");
+            setIncludeTaxBenefit("false"); setHospitalLocation(""); setHospitalName("");
+            setAilment(""); setCoverImg("h"); setFundraiserStory("h"); setFundraiserTitle("");
+
+            toast.success('🦄 Fundraiser Created Successfully', {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                theme: "dark",
+            });
+            setTimeout(() => {
+                router.push('/');
+            }, 2500);
+        } catch (e) {
+            console.log(e);
+            toast.error('🦄 Fundraiser Creation Failed', {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            });
+            setTimeout(() => {
+                router.push('/');
+            }, 2500);
+        }
     }
-    // setupfundraiser(cause, details.createdBy, details.creatorMail, details.creatorImg, benefitter, details.benefitterName, details.benefitterAge, details.benefitterGender, details.benefitterAddress, details.benefitterContact, details.amountRequired, details.amountRaised, details.endDateToRaise, details.includeTaxBenefit, details.hospitalName, details.hospitalLocation, details.ailment, details.coverImg, details.fundraiserTitle, details.fundraiserStory);
 
     return (
         <>
             <Navbar navtype={"setupFundraiser"} count={count} />
+            <ToastContainer
+                position="bottom-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover={false}
+                theme="dark"
+            />
             {/* Page 1 */}
             <div className={`${count !== 1 ? "hidden" : ""} mb-[100px] mt-[72px] flex flex-col items-center justify-center`}>
                 <div className='text-[#282828] border-[1.5px] border-solid border-[#e0e1e3] tracking-widest text-[16px] p-[10px_0] bg-[hsla(210,4%,89%,.2)] w-[200px] text-center '>Basic Details</div>
@@ -159,12 +271,12 @@ const SetupFundraiser = () => {
                 </div>
                 <form className="mt-12" action="" method="POST">
                     <div className=" relative left-[-170px]">
-                        <input value={details.createdBy} onChange={changing} id="createdBy" type="name" name="createdBy" className="peer h-10 w-[270%] border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600" placeholder="name" />
-                        <label htmlFor="name" className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Name</label>
+                        <input value={createdBy} onChange={handleCreatedByChange} id="createdBy" type="name" name="createdBy" className="peer h-10 w-[270%] border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600" placeholder="name" />
+                        <label htmlFor="createdBy" className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Name</label>
                     </div>
                     <div className="mt-10 relative left-[-170px]">
-                        <input value={details.creatorMail} onChange={changing} id="email" name="creatorMail" type="text" className="w-[270%] h-10 text-gray-900 placeholder-transparent border-b-2 border-gray-300 peer focus:outline-none focus:border-rose-600" placeholder="john@doe.com" />
-                        <label htmlFor="email" className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email address</label>
+                        <input value={creatorMail} onChange={handleCreatorMailChange} id="creatorMail" name="creatorMail" type="text" className="w-[270%] h-10 text-gray-900 placeholder-transparent border-b-2 border-gray-300 peer focus:outline-none focus:border-rose-600" placeholder="john@doe.com" />
+                        <label htmlFor="creatorMail" className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-600 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email address</label>
                     </div>
                 </form>
             </div>
@@ -268,10 +380,10 @@ const SetupFundraiser = () => {
                     </div>
                     <div className='p-4 px-20 pb-10 space-y-4 border-t border-b-0'>
                         <div> <span>I'm </span>
-                            <input value={details.benefitterName} onChange={changing} type="text" name="benefitterName" id="name" className='flex-1 py-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='  Name' />
+                            <input value={benefitterName} onChange={handleBenefitterNameChange} type="text" name="benefitterName" id="name" className='flex-1 py-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='  Name' />
                         </div>
                         <div>
-                            <input value={details.benefitterAge} onChange={changing} type="number" name="benefitterAge" id="age" className='flex-1 py-1 mr-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='Age' />
+                            <input value={benefitterAge} onChange={handleBenefitterAgeChange} type="number" name="benefitterAge" id="age" className='flex-1 py-1 mr-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='Age' />
                             <select id="date" name="date" className='flex-1 py-1.5 border-b-2 border-gray-400 text-gray-600 outline-none'>
                                 <option value="year">years</option>
                                 <option value="month">months</option>
@@ -280,20 +392,20 @@ const SetupFundraiser = () => {
                         </div>
                         <div className="pt-6 grid w-[18rem] grid-cols-3 p-2" x-data="app">
                             <div>
-                                <input checked type="radio" name="option" id="0" className="hidden peer" />
-                                <label htmlFor="0" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Male</label>
+                                <input value="male" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="male" className="hidden peer" />
+                                <label htmlFor="male" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Male</label>
                             </div>
                             <div>
-                                <input type="radio" name="option" id="1" className="hidden peer" />
-                                <label htmlFor="1" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Female</label>
+                                <input value="female" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="female" className="hidden peer" />
+                                <label htmlFor="female" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Female</label>
                             </div>
                             <div>
-                                <input type="radio" name="option" id="2" className="hidden peer" />
-                                <label htmlFor="2" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Other</label>
+                                <input value="others" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="others" className="hidden peer" />
+                                <label htmlFor="others" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Other</label>
                             </div>
                         </div>
                         <br />
-                        <div>I'm residing in <input value={details.benefitterAddress} onChange={changing} type="text" name="benefitterAddress" id="city" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
+                        <div>I'm residing in <input value={benefitterAddress} onChange={handleBenefitterAddressChange} type="text" name="benefitterAddress" id="city" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
                     </div>
                     <div className='p-4 px-20 bg-slate-200'>
                         <div className='border-b-2 border-gray-400'>
@@ -303,7 +415,7 @@ const SetupFundraiser = () => {
                                 <option value="1">+1</option>
                                 <option value="2">+2</option>
                             </select>
-                            <input value={details.benefitterContact} onChange={changing} type="tel" name="benefitterContact" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
+                            <input value={benefitterContact} onChange={handleBenefitterContactChange} type="tel" name="benefitterContact" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
                         </div>
                     </div>
                 </div>}
@@ -319,7 +431,7 @@ const SetupFundraiser = () => {
 
                     <div className='items-center p-4 px-20 pb-10 space-y-4 border-t border-b-0'>
                         <div>
-                            <input type="text" name="name" id="name" className='flex-1 w-full py-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder="Relative's name" />
+                            <input value={benefitterName} onChange={handleBenefitterNameChange} type="text" name="benefitterName" id="benefitterName" className='flex-1 w-full py-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder="Relative's name" />
                         </div>
                         <div className='inline-block ml-10'>
                             is my
@@ -333,7 +445,7 @@ const SetupFundraiser = () => {
                             </select>
                         </div>
                         <div>
-                            <input type="number" name="age" id="age" className='flex-1 py-1 mr-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='Age' />
+                            <input value={benefitterAge} onChange={handleBenefitterAgeChange} type="number" name="benefitterAge" id="age" className='flex-1 py-1 mr-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='Age' />
                             <select id="date" name="date" className='flex-1 py-1.5 border-b-2 border-gray-400 text-gray-600 outline-none'>
                                 <option value="year">years</option>
                                 <option value="month">months</option>
@@ -341,7 +453,8 @@ const SetupFundraiser = () => {
                             </select>
                         </div>
                         <br />
-                        <div>& residing in <input type="text" name="city" id="city" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
+                        <div>& residing in <input value={benefitterAddress} onChange={handleBenefitterAddressChange} type="text" name="benefitterAddress" id="city" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
+
                     </div>
                     <div className='p-4 px-20 bg-slate-200'>
                         <div className='border-b-2 border-gray-400'>
@@ -351,7 +464,7 @@ const SetupFundraiser = () => {
                                 <option value="1">+1</option>
                                 <option value="2">+2</option>
                             </select>
-                            <input type="tel" name="number" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
+                            <input value={benefitterContact} onChange={handleBenefitterContactChange} type="tel" name="benefitterContact" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
                         </div>
                     </div>
                 </div>}
@@ -367,10 +480,10 @@ const SetupFundraiser = () => {
 
                     <div className='items-center p-4 px-20 pb-10 space-y-4 border-t border-b-0'>
                         <div>
-                            <input type="text" name="name" id="name" className='flex-1 w-full py-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder="Write friend's full name" />
+                            <input value={benefitterName} onChange={handleBenefitterNameChange} type="text" name="benefitterName" id="benefitterName" className='flex-1 w-full py-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder="Write friend's full name" />
                         </div>
                         <div>
-                            <input type="number" name="age" id="age" className='flex-1 py-1 mr-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='Age' />
+                            <input value={benefitterAge} onChange={handleBenefitterAgeChange} type="number" name="benefitterAge" id="age" className='flex-1 py-1 mr-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='Age' />
                             <select id="date" name="date" className='flex-1 py-1.5 border-b-2 border-gray-400 text-gray-600 outline-none'>
                                 <option value="year">years</option>
                                 <option value="month">months</option>
@@ -378,24 +491,21 @@ const SetupFundraiser = () => {
                             </select>
                         </div>
                         <br />
-                        <div
-                            className="grid w-[18rem] grid-cols-3 p-2"
-                            x-data="app"
-                        >
+                        <div className="pt-6 grid w-[18rem] grid-cols-3 p-2" x-data="app">
                             <div>
-                                <input type="radio" name="option" id="0" className="hidden peer" checked />
+                                <input value="male" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="0" className="hidden peer" />
                                 <label htmlFor="0" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Male</label>
                             </div>
                             <div>
-                                <input type="radio" name="option" id="1" className="hidden peer" />
+                                <input value="female" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="1" className="hidden peer" />
                                 <label htmlFor="1" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Female</label>
                             </div>
                             <div>
-                                <input type="radio" name="option" id="2" className="hidden peer" />
+                                <input value="others" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="2" className="hidden peer" />
                                 <label htmlFor="2" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Other</label>
                             </div>
                         </div>
-                        <div>& residing in <input type="text" name="city" id="city" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
+                        <div>& residing in <input value={benefitterAddress} onChange={handleBenefitterAddressChange} type="text" name="benefitterAddress" id="city" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
                     </div>
                     <div className='p-4 px-20 bg-slate-200'>
                         <div className='border-b-2 border-gray-400'>
@@ -405,7 +515,7 @@ const SetupFundraiser = () => {
                                 <option value="1">+1</option>
                                 <option value="2">+2</option>
                             </select>
-                            <input type="tel" name="number" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
+                            <input value={benefitterContact} onChange={handleBenefitterContactChange} type="tel" name="benefitterContact" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
                         </div>
                     </div>
                 </div>}
@@ -420,8 +530,10 @@ const SetupFundraiser = () => {
                     </div>
 
                     <div className='items-center p-4 px-20 pb-10 text-gray-400 border-t border-b-0'>
-                        <div>Funds raised will help <input type="text" name="name" id="name" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
-                        <div className='pt-3 my-8 ml-4'>based out of<input type="text" name="city" id="city" className='py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
+                        <div>Funds raised will help
+                            <input value={benefitterName} onChange={handleBenefitterNameChange} type="text" name="benefitterName" id="name" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' />
+                        </div>
+                        <div className='pt-3 my-8 ml-4'>based out of<input value={benefitterAddress} onChange={handleBenefitterAddressChange} type="text" name="benefitterAddress" id="city" className='py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
                     </div>
                     <div className='p-4 px-20 bg-slate-200'>
                         <div className='border-b-2 border-gray-400'>
@@ -431,7 +543,7 @@ const SetupFundraiser = () => {
                                 <option value="1">+1</option>
                                 <option value="2">+2</option>
                             </select>
-                            <input type="tel" name="number" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
+                            <input value={benefitterContact} onChange={handleBenefitterContactChange} type="tel" name="benefitterContact" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
                         </div>
                     </div>
                 </div>}
@@ -439,8 +551,8 @@ const SetupFundraiser = () => {
                 {benefitter === "Registered NGO" && <div className='items-center border-solid border-2 border-[#beb0b4] mb-20 rounded-3xl overflow-hidden shadow-2xl'>
                     <div className='items-center p-4 px-20 pb-10 text-gray-400 border-t border-b-0'>
                         <input type="text" name="organ" id="organ" className='flex-1 w-full my-4 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='Name of the organisation' />
-                        <div>Funds raised will help <input type="text" name="name" id="name" className='flex-1 py-0 mt-4 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
-                        <div className='pt-3 my-6 ml-0'>based out of<input type="text" name="city" id="city" className='py-0 text-gray-600 border-b-2 border-gray-400 outline-none ' /> </div>
+                        <div>Funds raised will help <input value={benefitterName} onChange={handleBenefitterNameChange} type="text" name="benefitterName" id="name" className='flex-1 py-0 mt-4 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
+                        <div className='pt-3 my-6 ml-0'>based out of<input value={benefitterAddress} onChange={handleBenefitterAddressChange} type="text" name="benefitterAddress" id="city" className='py-0 text-gray-600 border-b-2 border-gray-400 outline-none ' /> </div>
                     </div>
                     <div className='p-4 px-20 bg-slate-200'>
                         <div className='border-b-2 border-gray-400'>
@@ -450,7 +562,7 @@ const SetupFundraiser = () => {
                                 <option value="1">+1</option>
                                 <option value="2">+2</option>
                             </select>
-                            <input type="tel" name="number" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
+                            <input value={benefitterContact} onChange={handleBenefitterContactChange} type="tel" name="benefitterContact" id="number" className='flex-1 inline py-1 text-gray-600 outline-none bg-slate-200' placeholder="Beneficiary's mobile no." />
                         </div>
                     </div>
                 </div>}
@@ -515,12 +627,12 @@ const SetupFundraiser = () => {
                 {cause === "medical" && <div className='my-10 space-y-10 text-gray-500 w-[460px] '>
                     <div>
                         <span>I want to raise &#8377;</span>
-                        <input value={details.amountRequired} onChange={changing} type="number" name="amountRequired" id="amount" className='flex-1 py-1 text-gray-600 border-b-2 border-gray-400 outline-none' />
+                        <input value={amountRequired} onChange={handleAmountRequiredChange} type="number" name="amountRequired" id="amountRequired" className='flex-1 py-1 text-gray-600 border-b-2 border-gray-400 outline-none' />
                     </div>
                     <div className='ml-24'>
                         <span>by</span>
                         <div className='relative inline'>
-                            <input value={details.endDateToRaise} onChange={changing} type="date" name="endDateToRaise" id="date" className="flex-1 px-2 py-1 text-black border-b-2 outline-none border-gray-40" />
+                            <input value={endDateToRaise} onChange={handleEndDateToRaiseChange} type="date" name="endDateToRaise" id="date" className="flex-1 px-2 py-1 text-black border-b-2 outline-none border-gray-40" />
                             <p className=' absolute text-[13px] top-[-16px] pl-7'>End Date</p>
                         </div>
                     </div>
@@ -529,11 +641,11 @@ const SetupFundraiser = () => {
                         <div>
                             <div className="grid w-[12rem] grid-cols-2" x-data="app">
                                 <div>
-                                    <input value={true} onChange={changing} type="radio" name="includeTaxBenefit" id="0" className="hidden peer" checked />
+                                    <input value="true" onChange={handleIncludeTaxBenefitChange} type="radio" name="includeTaxBenefit" id="Yes" className="hidden peer" />
                                     <label htmlFor="Yes" className="block p-2 text-center cursor-pointer select-none peer-checked:bg-green-500 peer-checked:font-bold peer-checked:text-white">Yes</label>
                                 </div>
                                 <div>
-                                    <input value={false} onChange={changing} type="radio" name="includeTaxBenefit" id="1" className="hidden peer" />
+                                    <input value="false" onChange={handleIncludeTaxBenefitChange} type="radio" name="includeTaxBenefit" id="No" className="hidden peer" />
                                     <label htmlFor="No" className="block p-2 text-center cursor-pointer select-none peer-checked:bg-green-500 peer-checked:font-bold peer-checked:text-white">No</label>
                                 </div>
                             </div>
@@ -541,9 +653,9 @@ const SetupFundraiser = () => {
                     </div>
                     <div className='space-y-4'>
                         <p className='text-sm'>Hospital name, location and ailment will have to be provided in order to issue tax receipts to your donors</p>
-                        <input value={details.hospitalName} onChange={changing} type="text" name="hospitalName" id="Hname" className='flex-1 py-0.5 border-b-2 border-gray-400 text-gray-400 outline-none w-full' placeholder='Hospital Name' />
-                        <input value={details.hospitalLocation} onChange={changing} type="text" name="hospitalLocation" id="Hloc" className='flex-1 py-0.5 border-b-2 border-gray-400 text-gray-400 outline-none w-full' placeholder='Location (City) of the hospital' />
-                        <input value={details.ailment} onChange={changing} type="text" name="ailment" id="ailment" className='flex-1 py-0.5 border-b-2 border-gray-400 text-gray-400 outline-none w-full' placeholder='Ailment' />
+                        <input value={hospitalName} onChange={handleHospitalNameChange} type="text" name="hospitalName" id="Hname" className='flex-1 py-0.5 border-b-2 border-gray-400 text-gray-400 outline-none w-full' placeholder='Hospital Name' />
+                        <input value={hospitalLocation} onChange={handleHospitalLocationChange} type="text" name="hospitalLocation" id="Hloc" className='flex-1 py-0.5 border-b-2 border-gray-400 text-gray-400 outline-none w-full' placeholder='Location (City) of the hospital' />
+                        <input value={ailment} onChange={handleAilmentChange} type="text" name="ailment" id="ailment" className='flex-1 py-0.5 border-b-2 border-gray-400 text-gray-400 outline-none w-full' placeholder='Ailment' />
                     </div>
                 </div>}
 
@@ -551,12 +663,12 @@ const SetupFundraiser = () => {
                 {(cause === "education" || cause === "others") && <div className='my-10 space-y-10 text-gray-500 w-[460px]'>
                     <div>
                         <span>I want to raise &#8377;</span>
-                        <input type="number" name="amount" id="amount" className='flex-1 py-1 text-gray-600 border-b-2 border-gray-400 outline-none' />
+                        <input value={amountRequired} onChange={handleAmountRequiredChange} type="number" name="amountRequired" id="amountRequired" className='flex-1 py-1 text-gray-600 border-b-2 border-gray-400 outline-none' />
                     </div>
                     <div className='ml-24'>
                         <span>by</span>
                         <div className='relative inline'>
-                            <input type="date" name="date" id="date" className="flex-1 px-2 py-1 text-black border-b-2 outline-none border-gray-40" />
+                            <input value={endDateToRaise} onChange={handleEndDateToRaiseChange} type="date" name="endDateToRaise" id="date" className="flex-1 px-2 py-1 text-black border-b-2 outline-none border-gray-40" />
                             <p className=' absolute text-[13px] top-[-16px] pl-7'>End Date</p>
                         </div>
                     </div>
@@ -566,12 +678,12 @@ const SetupFundraiser = () => {
                 {cause === "memorial" && <div className='my-10 space-y-10 text-gray-500 w-[460px] '>
                     <div>
                         <span>I want to raise &#8377;</span>
-                        <input type="number" name="amount" id="amount" className='flex-1 py-1 text-gray-600 border-b-2 border-gray-400 outline-none' />
+                        <input value={amountRequired} onChange={handleAmountRequiredChange} type="number" name="amountRequired" id="amountRequired" className='flex-1 py-1 text-gray-600 border-b-2 border-gray-400 outline-none' />
                     </div>
                     <div className='ml-24'>
                         <span>by</span>
                         <div className='relative inline'>
-                            <input type="date" name="date" id="date" className="flex-1 px-2 py-1 text-black border-b-2 outline-none border-gray-40" />
+                            <input value={endDateToRaise} onChange={handleEndDateToRaiseChange} type="date" name="endDateToRaise" id="date" className="flex-1 px-2 py-1 text-black border-b-2 outline-none border-gray-40" />
                             <p className=' absolute text-[13px] top-[-16px] pl-7'>End Date</p>
                         </div>
                     </div>
@@ -580,17 +692,15 @@ const SetupFundraiser = () => {
                         <div>
                             <div className="grid w-[12rem] grid-cols-2" x-data="app">
                                 <div>
-                                    <input type="radio" name="tax" id="0" className="hidden peer" checked />
+                                    <input value="true" onChange={handleIncludeTaxBenefitChange} type="radio" name="includeTaxBenefit" id="Yes" className="hidden peer" />
                                     <label htmlFor="Yes" className="block p-2 text-center cursor-pointer select-none peer-checked:bg-green-500 peer-checked:font-bold peer-checked:text-white">Yes</label>
                                 </div>
                                 <div>
-                                    <input type="radio" name="tax" id="1" className="hidden peer" />
+                                    <input value="false" onChange={handleIncludeTaxBenefitChange} type="radio" name="includeTaxBenefit" id="No" className="hidden peer" />
                                     <label htmlFor="No" className="block p-2 text-center cursor-pointer select-none peer-checked:bg-green-500 peer-checked:font-bold peer-checked:text-white">No</label>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>}
 
@@ -616,17 +726,19 @@ const SetupFundraiser = () => {
                 <div className='mt-8 pb-16 p-8 w-[480px] items-center border-solid border-2 border-[#beb0b4] mb-10 rounded-3xl overflow-hidden shadow-2xl'>
                     <div>
                         <p className='text-center'>Name your fundraiser</p>
-                        <input onChange={changing} value={details.fundraiserTitle} type="text" name="fundraiserTitle" id="title" className='flex-1 w-full p-2 py-1 text-sm text-center text-gray-600 border-b-2 border-gray-400 outline-none align-centre' placeholder="Eg: Help Mohit in saving activa" />
+                        <input onChange={handleFundraiserTitleChange} value={fundraiserTitle} type="text" name="fundraiserTitle" id="title" className='flex-1 w-full p-2 py-1 text-sm text-center text-gray-600 border-b-2 border-gray-400 outline-none align-centre' placeholder="Eg: Help Mohit in saving activa" />
                     </div>
                     <div className='p-1 mt-4 bg-gray-500 rounded-xl'>
                         <div className='pb-10 m-1 bg-white rounded-lg'>
                             <ReactQuill className='m-0 h-[300px] placeholder:text-gray-400'
-                                value={details.fundraiserStory}
+                                value={fundraiserStory}
                                 name="fundraiserStory"
-                                // onChange={changing}
+                                onChange={setFundraiserStory}
+                                // onChange={handleFundraiserStoryChange}
                                 placeholder="Write your story. Keep it simple, personal, and about the specific use of funds. Write about: Who is this fundraiser for? When do you need funds? How do you plan to use the funds?"
                             />
                         </div>
+                        {/* <button onClick={console.log(fundraiserStory)}>check</button> */}
                     </div>
                 </div>
             </div>
@@ -636,7 +748,7 @@ const SetupFundraiser = () => {
                     <img className='left-[120px] w-[65.3px] absolute top-[-4px] ' src={"/assets/fixedbottom.png"} alt="temp" />
                     {count > 2 && <button onClick={() => handleCountDecreaseChange()} className='w-fit ml-8 underline underline-offset-4 text-white py-2 text-[15px] '>Back</button>}
                     {count === 4 &&
-                        <button onClick={() => handleSubmit()} className='absolute rounded-full right-[40px] inline-block w-[120px] text-[#9c3353] py-2 bg-[#fff] text-[15px] '>Continue</button>
+                        <button onClick={(e) => handleSubmit(e)} className='absolute rounded-full right-[40px] inline-block w-[120px] text-[#9c3353] py-2 bg-[#fff] text-[15px] '>Continue</button>
                     }{count !== 4 &&
                         <button onClick={() => handleCountIncreaseChange()} className='absolute rounded-full right-[40px] inline-block w-[120px] text-[#9c3353] py-2 bg-[#fff] text-[15px] '>Continue</button>
                     }
@@ -646,28 +758,5 @@ const SetupFundraiser = () => {
         </>
     )
 }
-
-// export async function getServerSideProps(context) {
-//     if (!mongoose.connections[0].readystate) {
-//         await mongoose.connect(process.env.MONGO_URI);
-//     }
-
-//     const setupfundraiser = async (category, createdBy, creatorMail, creatorImg, benefitterCreatorRelation, benefitterName, benefitterAge, benefitterGender, benefitterAddress, benefitterContact, amountRequired, amountRaised, endDateToRaise, includeTaxBenefit, hospitalName, hospitalLocation, ailment, coverImg, fundraiserTitle, fundraiserStory) => {
-//         const response = await fetch(`${host}/api/profile/addEmployee`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 // 'auth-token': localStorage.getItem('token').toString()
-//             },
-//             body: JSON.stringify({ category, createdBy, creatorMail, creatorImg, benefitterCreatorRelation, benefitterName, benefitterAge, benefitterGender, benefitterAddress, benefitterContact, amountRequired, amountRaised, endDateToRaise, includeTaxBenefit, hospitalName, hospitalLocation, ailment, coverImg, fundraiserTitle, fundraiserStory })
-//         });
-//         // const json = await response.json();
-//         console.log("Processing the fundraise request", response)
-//         // setProfiles(profiles.concat(json))
-//     }
-//     return {
-//         props: { }, // will be passed to the page component as props
-//     };
-// }
 
 export default SetupFundraiser

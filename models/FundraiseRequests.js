@@ -22,7 +22,7 @@ const FundraiseRequestsSchema = new Schema({
     amountRaised:{type: Number,default: 0},
 
     endDateToRaise:{type: Date,required:true},
-    includeTaxBenefit:{type: Boolean,required:true},
+    includeTaxBenefit:{type: String,required:true},
 
     hospitalName:{type:String,required:true},
     hospitalLocation:{type:String,required:true},

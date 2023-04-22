@@ -1,4 +1,4 @@
-import { useRef, useState,useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import CircularProgressBar from "../../components/CircularProgressBar";
 import Navbar from "../../components/Navbar";
 import { BsWhatsapp, BsFacebook } from 'react-icons/bs';
@@ -8,29 +8,25 @@ import Image from "next/image";
 import Footer from "../../components/Footer";
 import mongoose from 'mongoose'
 import FundraiseRequests from "../../models/FundraiseRequests";
+import Checkout from "../checkout";
 
 const Post = ({ fundraiserDetails }) => {
-    // const { finaldata } = props;
     console.log(fundraiserDetails);
+    // const { finaldata } = props;
     const ref = useRef(null)
 
-    // const handleScroll = () => {
-    //     const element = ref.current;
-    //     const distanceFromBottom = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
-    //     if (distanceFromBottom <= 300) {
-    //         element.classList.remove('fixed');
-    //     } else {
-    //         element.classList.add('fixed');
-    //     }
-    // }
     useEffect(() => {
+        localStorage.removeItem("fundraiserTitle");
+        localStorage.setItem("fundraiserTitle", fundraiserDetails.fundraiserTitle);
         const handleScroll = () => {
             const element = ref.current;
             const distanceFromBottom = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
-            if (distanceFromBottom <= 300) {
-                element.classList.remove('fixed');
-            } else {
-                element.classList.add('fixed');
+            if (element) {
+                if (distanceFromBottom <= 300) {
+                    element.classList.remove('fixed');
+                } else {
+                    element.classList.add('fixed');
+                }
             }
         };
 
@@ -109,14 +105,14 @@ const Post = ({ fundraiserDetails }) => {
 
                     {/* Story Update handler */}
                     <div className="flex mb-6 text-center">
-                        <button onClick={()=>{setstoryUpdate("story")}} className={`w-full ${storyUpdate === "story" ? "font-bold text-white bg-[#9c3353] " : " text-[#212121] bg-white"} rounded-[30px_0_0_30px] text-[18px] border-[1px] border-solid border-[#9c3353] leading-[50px]`}>Story</button>
-                        <button onClick={()=>{setstoryUpdate("update")}} className={`w-full ${storyUpdate === "update" ? "font-bold text-white bg-[#9c3353] " : " text-[#212121] bg-white"} rounded-[0px_30px_30px_0px] text-[18px] border-[1px] border-solid border-[#9c3353] leading-[50px]`}>Update</button>
+                        <button onClick={() => { setstoryUpdate("story") }} className={`w-full ${storyUpdate === "story" ? "font-bold text-white bg-[#9c3353] " : " text-[#212121] bg-white"} rounded-[30px_0_0_30px] text-[18px] border-[1px] border-solid border-[#9c3353] leading-[50px]`}>Story</button>
+                        <button onClick={() => { setstoryUpdate("update") }} className={`w-full ${storyUpdate === "update" ? "font-bold text-white bg-[#9c3353] " : " text-[#212121] bg-white"} rounded-[0px_30px_30px_0px] text-[18px] border-[1px] border-solid border-[#9c3353] leading-[50px]`}>Update</button>
                     </div>
 
                     {/* Story */}
                     <div className="tracking-wider text-[#3a3a3a] leading-6">
-                        <div>
-                            {fundraiserDetails.fundraiserStory}
+                        <div dangerouslySetInnerHTML={{ __html: fundraiserDetails.fundraiserStory }}>
+                            {/* {fundraiserDetails.fundraiserStory} */}
                         </div>
                     </div>
 
@@ -152,7 +148,7 @@ const Post = ({ fundraiserDetails }) => {
                         </div>
 
                         <div className='mx-auto w-[330px] text-center bg-[#9c3353] shadow-[0_0_6px_0_rgba(156,51,83,.2)] rounded-full hover:shadow-[0_3px_3px_0_rgba(0,0,0,.14),0_1px_7px_0_rgba(0,0,0,.12),0_3px_1px_-1px_rgba(0,0,0,.2)]' >
-                            <Link className='text-[#fff] text-xl leading-[50px] ' href="/fundraiser/temp" >Donate Now</Link>
+                            <Link className='text-[#fff] text-xl leading-[50px] ' href={'/checkout'} onClick={Checkout} >Donate Now</Link>
                         </div>
 
                         <div className="text-[#5d5d5d] leading-[21px] m-[0_30px] text-center my-[12px] text-[14px]">

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { AiOutlineSearch } from 'react-icons/ai'
+import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai'
 import { FaHandHoldingHeart, FaStethoscope } from 'react-icons/fa'
 import { GiCandleLight } from 'react-icons/gi'
 import { MdOutlineCall } from 'react-icons/md'
+import { BsFillTelephoneFill } from 'react-icons/bs'
 import CircularProgressBar from '../components/CircularProgressBar'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -12,9 +13,29 @@ import FundraiseRequests from '../models/FundraiseRequests'
 import mongoose from "mongoose";
 
 
-function LandingPage() {
+const LandingPage = () => {
     const host = `${process.env.NEXT_PUBLIC_DEPLOYED}`;
     const [data, setData] = useState({});
+
+    const [isOpen, setIsOpen] = useState(false);
+    // const [details, setdetails] = useState({ requesterName: '', requesterPhone: '', requesterfundraise: '', requesterlanguage: '' });
+    const [requesterPhone, setRequesterPhone] = useState('');
+    const [requesterName, setRequesterName] = useState('');
+    const [requesterfundraise, setRequesterFundraise] = useState('medical');
+    const [requesterlanguage, setRequesterLanguage] = useState('english');
+
+    const handleNameChange = (event) => {
+        setRequesterName(event.target.value);
+    }
+    const handlePhoneChange = (event) => {
+        setRequesterPhone(event.target.value);
+    }
+    const handleFundraiseChange = (event) => {
+        setRequesterFundraise(event.target.value);
+    }
+    const handleLanguageChange = (event) => {
+        setRequesterLanguage(event.target.value);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,18 +46,44 @@ function LandingPage() {
                 },
             });
             const json = await response.json();
-            console.log("JSON", json);
+            // console.log("JSON", json);
             if (json.success) {
                 setData(JSON.parse(JSON.stringify(json)));
-                console.log("here", data);
+                // console.log("here", data);
             }
         }
         fetchData();
-    }, [])
-
-    console.log("data", data);
+    }, [isOpen])
     let finaldata = data.data;
-    console.log("final", finaldata)
+
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+    // const changing = (e) => {
+    //     setdetails({ ...details, [e.target.name]: e.target.value });
+    // }
+
+    const handleSubmit = async (e) => {
+        // setdetails(details.requesterName, details.requesterPhone, details.requesterfundraise, details.requesterlanguage);
+        const response = await fetch(`${host}/api/contact`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({requesterPhone:requesterPhone,requesterName:requesterName,requesterfundraise:requesterfundraise,requesterlanguage:requesterlanguage})
+        });
+        const json = await response.json();
+
+        setRequesterName('')
+        setRequesterPhone('')
+        setRequesterFundraise('')
+        setRequesterLanguage('')
+        setIsOpen(false);
+    }
 
     // const percentage = 90;
     return (
@@ -60,7 +107,7 @@ function LandingPage() {
                     </div>
 
                     <div className='ml-auto cursor-default z-[-1] '>
-                        <Image className='scale-[1.15] h-auto mr-10 mt-[-80px]' style={{width:"auto"}} width={500} priority={100} height={500} src={"/assets/bgImage.jpg"} alt="op" />
+                        <Image className='scale-[1.15] h-auto mr-10 mt-[-80px]' style={{ width: "auto" }} width={500} priority={100} height={500} src={"/assets/bgImage.jpg"} alt="op" />
                     </div>
                 </div>
 
@@ -97,7 +144,7 @@ function LandingPage() {
                         return (
                             <div key={item._id} className="cursor-pointer mx-3 mb-5 h-[530px] hover:shadow-[0_0_20px_0_rgba(156,51,83,0.3)] shadow-[0_0_30px_0_rgba(156,51,83,0.2)] w-[30%] bg-white border border-gray-200 rounded-lg relative">
                                 <Link href={`/fundraiser/${item.slug}`}>
-                                    {item.includeTaxBenefit === true &&
+                                    {item.includeTaxBenefit === "true" &&
                                         <div className="absolute top-0 left-[-5px] px-2 py-1 bg-[#9c3353] text-white rounded-tr-lg rounded-bl-lg transform overflow-hidden">Tax Benefit</div>
                                     }
                                     <img className="w-[100%] rounded-t-lg" src="https://cimages.milaap.org/milaap/image/upload/c_fill,h_452,w_603/v1679944130/production/images/campaign/639821/A7852872-9C10-4830-9813-12066662E039_ahi9m1_1679944133.jpg" alt="" />
@@ -119,8 +166,8 @@ function LandingPage() {
                                         </div>
                                     </div>
 
-                                    <div className={`ml-5 mr-6 ${item.includeTaxBenefit === true?"bg-[#f7f7f7]":""} h-[55px] text-[#2b2b35] p-2`}>
-                                        {item.includeTaxBenefit === true &&
+                                    <div className={`ml-5 mr-6 ${item.includeTaxBenefit === "true" ? "bg-[#f7f7f7]" : ""} h-[55px] text-[#2b2b35] p-2`}>
+                                        {item.includeTaxBenefit === "true" &&
                                             <p className='relative before:absolute before:content-[""] before:bg-[#691a47] text-sm ml-2 before:h-[136%] before:top-[-8px] before:w-[4px] before:left-[-16px]'>Recieve Tax benefit by contributing to this cause.</p>
                                         }
                                     </div>
@@ -136,7 +183,7 @@ function LandingPage() {
                         <div className='text-center m-[0_auto] bg-[#fff] rounded-[9px] p-[18px_0] w-[85%] max-w-[1280px] '>
                             <div className='flex items-center justify-center'>
                                 <p className='text-[#212121] text-[30px] mr-[15px] m-[24px_0_17px]'>Need help to setup your free fundraiser?</p>
-                                <button className='h-[45px] leading-[45px] inline-block w-[250px] m-[0_2px_24px] mb-[0] text-[18px] transition-colors delay-[0.2s] ease bg-[#9c3353] text-white rounded-full shadow-[0_0_6px_0_rgba(156,51,83,.2)] hover:shadow-[0_0_8px_0_rgba(156,51,83,.4)] '>
+                                <button onClick={openModal} className='h-[45px] leading-[45px] inline-block w-[250px] m-[0_2px_24px] mb-[0] text-[18px] transition-colors delay-[0.2s] ease bg-[#9c3353] text-white rounded-full shadow-[0_0_6px_0_rgba(156,51,83,.2)] hover:shadow-[0_0_8px_0_rgba(156,51,83,.4)] '>
                                     <span className='flex items-center justify-center'>
                                         <MdOutlineCall className='h-[24px] w-[24px] mr-[11px] ' size={25} />
                                         <span className='text-[20px]'>Request a call</span>
@@ -154,6 +201,61 @@ function LandingPage() {
                         <span>Contact us</span>
                     </Link>
                 </div>
+
+                {isOpen &&
+                    <div className="fixed inset-0 z-10">
+                        <div className="absolute inset-0 bg-gray-500 opacity-50"></div>
+                        <div className="relative mx-auto mt-20 p-8 bg-white rounded-lg shadow-lg w-[570px]">
+                            <div className="flex justify-end ">
+                                <AiOutlineClose className="text-2xl text-gray-600 hover:cursor-pointer focus:outline-none" onClick={closeModal} />
+                            </div>
+                            <div className="mt-4 mb-6">
+                                <div>
+                                    <div className='flex justify-center'><img className='w-[50px] inline' src="/assets/logo.png" alt="logo" /> <span className='text-[#691a47] my-3'>HopeFund</span></div>
+                                    <p className='text-center text-gray-600'>Raise funds online with HopeFund</p>
+                                </div>
+                            </div>
+                            <div className='space-y-4'>
+                                <div className='text-black'>Fill your details & we will connect with you shortly</div>
+                                <input value={requesterName} onChange={handleNameChange} type="text" name="requesterName" id="requesterName" className='flex-1 w-full py-1 text-gray-600 border-b-2 border-gray-400 outline-none' placeholder='  Name' />
+                                <div>
+                                    <div className='border-b-2 border-gray-400'>
+                                        <BsFillTelephoneFill className='text-[#000000] inline' />
+                                        <select id="ccode" name="ccode" className='flex-1 py-1.5 outline-none inline'>
+                                            <option value="0">+91</option>
+                                            <option value="1">+1</option>
+                                            <option value="2">+2</option>
+                                        </select>
+                                        <input value={requesterPhone} onChange={handlePhoneChange} type="number" name="requesterPhone" id="requesterPhone" className='flex-1 inline px-5 py-1 text-gray-600 outline-none' placeholder="Phone number" />
+                                    </div>
+                                    <div className='text-[12px] text-gray-500'>We will contact you on this number</div>
+                                </div>
+
+                                <div className='text-sm text-gray-700'>Why are you fundraising</div>
+                                <div>
+                                    <select value={requesterfundraise} onChange={handleFundraiseChange} name="requesterfundraise" className='flex-1 py-1.5 pl-2 pr-16 border-b-2 border-gray-400 text-gray-600 outline-none w-full'>
+                                        {/* <option value=""></option> */}
+                                        <option value="medical">Medical</option>
+                                        <option value="memorial">Memorial</option>
+                                        <option value="education">Education</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div className='text-sm text-gray-700'>Prefered language</div>
+                                <div>
+                                    <select value={requesterlanguage} onChange={handleLanguageChange} name="requesterlanguage" className='flex-1 py-1.5 pl-2 pr-16 border-b-2 border-gray-400 text-gray-600 outline-none w-full'>
+                                        <option value="english">English</option>
+                                        <option value="hindi">हिन्दी</option>
+                                    </select>
+                                </div>
+                                <div className='flex items-center justify-center'>
+                                    <button onClick={(e) => handleSubmit(e)} className='text-white text-xl py-1 px-20 rounded-3xl bg-[#691a47]' type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
 
                 {/* Footer */}
                 <Footer />
