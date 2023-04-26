@@ -7,12 +7,6 @@ const handler = async (req, res) => {
     }
     try{
         let data = await FundraiseRequests.find({verified:true});
-        // let finaldata = {};
-        // for (let item of data) {
-        //     if (item.verified) {
-        //         finaldata.push(item);
-        //     }
-        // }
         res.status(200).json( {success:"true",data} )
     }catch(e){
         console.log(e)

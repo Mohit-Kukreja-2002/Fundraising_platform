@@ -11,7 +11,8 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import FundraiseRequests from '../models/FundraiseRequests'
 import mongoose from "mongoose";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LandingPage = () => {
     const host = `${process.env.NEXT_PUBLIC_DEPLOYED}`;
@@ -38,6 +39,19 @@ const LandingPage = () => {
     }
 
     useEffect(() => {
+        if (localStorage.getItem("paymentInitiated") == "true") {
+            toast.error('⚠ Payment Failed! Please Try Again...', {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            });
+            localStorage.removeItem("paymentInitiated");
+            localStorage.removeItem("amount");
+        }
         const fetchData = async () => {
             const response = await fetch(`${host}/api/getFundraisers`, {
                 method: 'GET',
@@ -74,7 +88,7 @@ const LandingPage = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({requesterPhone:requesterPhone,requesterName:requesterName,requesterfundraise:requesterfundraise,requesterlanguage:requesterlanguage})
+            body: JSON.stringify({ requesterPhone: requesterPhone, requesterName: requesterName, requesterfundraise: requesterfundraise, requesterlanguage: requesterlanguage })
         });
         const json = await response.json();
 
@@ -83,6 +97,16 @@ const LandingPage = () => {
         setRequesterFundraise('')
         setRequesterLanguage('')
         setIsOpen(false);
+
+        toast.success('Our executive will contact you soon.', {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            theme: "dark",
+        });
     }
 
     // const percentage = 90;
@@ -90,6 +114,18 @@ const LandingPage = () => {
         <>
 
             <Navbar navtype={"landing"} />
+            <ToastContainer
+                position="bottom-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover={false}
+                theme="dark"
+            />
             <div className='mt-[80px]'>
                 <div className="flex items-center justify-center font-sans">
                     <div className='mt-[-10px] mx-auto ml-[150px] w-[40%]'>
@@ -153,7 +189,7 @@ const LandingPage = () => {
                                     </div>
 
                                     <div className='flex pl-5 h-[90px]'>
-                                        <div> <CircularProgressBar percentage={Math.ceil(100 * (item.amountRaised / item.amountRequired))} /> </div>
+                                        <div> <CircularProgressBar percentage={Math.ceil(100 * (item.amountRaised / item.amountRequired)) <= 100 ? Math.ceil(100 * (item.amountRaised / item.amountRequired)) : 100} /> </div>
                                         <div className='mt-4'>
                                             <p className='text-[#71737B] text-sm font-bold'>Raised</p>
                                             <p className='mt-1 text-xl'>₹{item.amountRaised}</p>

@@ -18,16 +18,28 @@ import 'react-toastify/dist/ReactToastify.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+import axios from "axios";
+// import fs from "fs/promises";
+import path from "path";
+import Link from "next/link";
+
 const SetupFundraiser = () => {
+    const [image1, setImage1] = useState(null);
+    const [createObjectURL1, setCreateObjectURL1] = useState(null);
+    const [image2, setImage2] = useState(null);
+    const [createObjectURL2, setCreateObjectURL2] = useState(null);    
 
     // Variables
     const divref = useRef(null);
     const inputRef = useRef(null);
+    const inputRef1 = useRef(null);
+    const inputRef2 = useRef(null);
     const router = useRouter();
 
 
     const [cause, setCause] = useState("medical");
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage1, setSelectedImage1] = useState(null);
+    const [selectedImage2, setSelectedImage2] = useState(null);
     const [count, setCount] = useState(1);
     const [value, setValue] = useState('');
     const [benefitter, setBenefitter] = useState("");
@@ -39,7 +51,7 @@ const SetupFundraiser = () => {
     const [benefitterCreatorRelation, setBenefitterCreatorRelation] = useState(benefitter);
     const [benefitterName, setBenefitterName] = useState("");
     const [benefitterAge, setBenefitterAge] = useState("");
-    const [benefitterGender, setBenefitterGender] = useState("Not Applicable");
+    const [benefitterGender, setBenefitterGender] = useState("Male");
     const [benefitterAddress, setBenefitterAddress] = useState("");
     const [benefitterContact, setBenefitterContact] = useState("");
     const [amountRequired, setAmountRequired] = useState("");
@@ -53,9 +65,32 @@ const SetupFundraiser = () => {
     const [fundraiserTitle, setFundraiserTitle] = useState("");
     const [fundraiserStory, setFundraiserStory] = useState("");
 
+    const uploadToServer1 = async (imgName) => {
+        const body = new FormData();
+        // console.log("file", image)
+        body.append("file", image1);
+        body.append("photo", imgName);
+        const response = await fetch("/api/FileReader", {
+            method: "POST",
+            body
+        });
+    };
+    const uploadToServer2 = async (imgName) => {
+        const body = new FormData();
+        // console.log("file", image)
+        body.append("file", image2);
+        body.append("photo", imgName);
+        const response = await fetch("/api/FileReader2", {
+            method: "POST",
+            body
+        });
+    };
+
     useEffect(() => { }, [cause])
 
     const handleClick = () => { inputRef.current.click(); };
+    const handleClick1 = () => { inputRef1.current.click(); };
+    const handleClick2 = () => { inputRef2.current.click(); };
 
     const handleCauseChange = (value) => { setCause(value); };
 
@@ -73,8 +108,11 @@ const SetupFundraiser = () => {
         setCount(count - 1);
     };
 
-    const handleImageChange = (event) => {
-        setSelectedImage(URL.createObjectURL(event.target.files[0]));
+    const handleImageChange1 = (event) => {
+        setSelectedImage1(URL.createObjectURL(event.target.files[0]));
+    }
+    const handleImageChange2 = (event) => {
+        setSelectedImage2(URL.createObjectURL(event.target.files[0]));
     }
 
     const toggleBlockHidden = () => {
@@ -163,12 +201,17 @@ const SetupFundraiser = () => {
             console.log("Processing the fundraise request", json);
             e.preventDefault();
 
+            console.log("here"); uploadToServer1(fundraiserTitle);
+            console.log("here"); uploadToServer2(fundraiserTitle);
+
             setCategory(cause); setCreatedBy(""); setCreatorMail(""); setCreatorImg("");
             setBenefitterCreatorRelation(benefitter); setBenefitterName(""); setBenefitterAge("");
             setBenefitterGender("Not Applicable"); setBenefitterAddress(""); setBenefitterContact("");
             setAmountRaised(0); setAmountRequired(""); setEndDateToRaise("");
             setIncludeTaxBenefit("false"); setHospitalLocation(""); setHospitalName("");
-            setAilment(""); setCoverImg("h"); setFundraiserStory("h"); setFundraiserTitle("");
+            setAilment(""); setCoverImg("h"); setFundraiserStory("h");
+
+            // setFundraiserTitle("");
 
             toast.success('🦄 Fundraiser Created Successfully', {
                 position: "bottom-center",
@@ -180,8 +223,9 @@ const SetupFundraiser = () => {
                 theme: "dark",
             });
             setTimeout(() => {
-                router.push('/');
+                router.push(`/fundraiser/${fundraiserTitle}`);
             }, 2500);
+            setFundraiserTitle("");
         } catch (e) {
             console.log(e);
             toast.error('🦄 Fundraiser Creation Failed', {
@@ -373,8 +417,15 @@ const SetupFundraiser = () => {
                 {benefitter === "myself" && <div className='items-center border-solid border-2 border-[#beb0b4] mb-20 rounded-3xl overflow-hidden shadow-2xl'>
                     <div className='p-3 bg-slate-200'>
                         <div className='relative w-20 h-20 m-auto'>
-                            <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage || '/assets/user.png'} alt="Selected" onClick={handleClick} />
-                            <input type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
+                            <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage1 || '/assets/user.png'} alt="Selected" onClick={handleClick1} />
+                            <input type="file" accept="image/*" ref={inputRef1} onChange={(event) => {
+                                if (event.target.files && event.target.files[0]) {
+                                    const i = event.target.files[0];
+                                    setImage1(i);
+                                    setCreateObjectURL1(URL.createObjectURL(i));
+                                }
+                                handleImageChange1(event);
+                            }} style={{ display: 'none' }} />
                             <AiTwotonePlusCircle size={20} className="z-[200]  bottom-1 right-0 absolute m-0 text-[#9c3353]" />
                         </div>
                     </div>
@@ -390,18 +441,18 @@ const SetupFundraiser = () => {
                                 <option value="day">days</option>
                             </select>
                         </div>
-                        <div className="pt-6 grid w-[18rem] grid-cols-3 p-2" x-data="app">
+                        <div className="pt-6 grid w-[18rem] grid-cols-3 p-2">
                             <div>
-                                <input value="male" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="male" className="hidden peer" />
-                                <label htmlFor="male" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Male</label>
+                                <input value={"Male"} type="radio" name="benefitterGenderChange" id="Male" className="hidden peer" checked={benefitterGender === "Male"} onChange={handleBenefitterGenderChange} />
+                                <label htmlFor="Male" className={(benefitterGender === "Male") ? 'block cursor-pointer select-none p-2 text-center bg-[#9c3353] font-bold text-white' : 'block cursor-pointer select-none p-2 text-center'}>Male</label>
                             </div>
                             <div>
-                                <input value="female" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="female" className="hidden peer" />
-                                <label htmlFor="female" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Female</label>
+                                <input value={"Female"} type="radio" name="benefitterGenderChange" id="Female" className="hidden peer" checked={benefitterGender === "Female"} onChange={handleBenefitterGenderChange} />
+                                <label htmlFor="Female" className={(benefitterGender === "Female") ? 'block cursor-pointer select-none p-2 text-center bg-[#9c3353] font-bold text-white' : 'block cursor-pointer select-none p-2 text-center'}>Female</label>
                             </div>
                             <div>
-                                <input value="others" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="others" className="hidden peer" />
-                                <label htmlFor="others" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Other</label>
+                                <input value={"Other"} type='radio' name="benefitterGenderChange" id="Other" className="hidden peer" checked={benefitterGender === "Other"} onChange={handleBenefitterGenderChange} />
+                                <label htmlFor="Other" className={(benefitterGender === "Other") ? 'block cursor-pointer select-none p-2 text-center bg-[#9c3353] font-bold text-white' : 'block cursor-pointer select-none p-2 text-center'}>Other</label>
                             </div>
                         </div>
                         <br />
@@ -423,7 +474,7 @@ const SetupFundraiser = () => {
                 {benefitter === "my relative" && <div className='items-center border-solid border-2 border-[#beb0b4] mb-20 rounded-3xl overflow-hidden shadow-2xl'>
                     <div className='p-3 bg-slate-200'>
                         <div className='relative w-20 h-20 m-auto'>
-                            <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage || '/assets/user.png'} alt="Selected" onClick={handleClick} />
+                            <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage1 || '/assets/user.png'} alt="Selected" onClick={handleClick} />
                             <input type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
                             <AiTwotonePlusCircle size={20} className="absolute z-[200]  bottom-1 right-0 m-0 text-[#9c3353]" />
                         </div>
@@ -472,7 +523,7 @@ const SetupFundraiser = () => {
                 {benefitter === "my friends" && <div className='items-center border-solid border-2 border-[#beb0b4] mb-20 rounded-3xl overflow-hidden shadow-2xl'>
                     <div className='p-3 bg-slate-200'>
                         <div className='relative w-20 h-20 m-auto'>
-                            <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage || '/assets/user.png'} alt="Selected" onClick={handleClick} />
+                            <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage1 || '/assets/user.png'} alt="Selected" onClick={handleClick} />
                             <input type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
                             <AiTwotonePlusCircle size={20} className="absolute z-[200]  bottom-1 right-0 m-0 text-[#9c3353]" />
                         </div>
@@ -493,16 +544,16 @@ const SetupFundraiser = () => {
                         <br />
                         <div className="pt-6 grid w-[18rem] grid-cols-3 p-2" x-data="app">
                             <div>
-                                <input value="male" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="0" className="hidden peer" />
-                                <label htmlFor="0" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Male</label>
+                                <input value={"Male"} type="radio" name="benefitterGenderChange" id="Male" className="hidden peer" checked={benefitterGender === "Male"} onChange={handleBenefitterGenderChange} />
+                                <label htmlFor="Male" className={(benefitterGender === "Male") ? 'block cursor-pointer select-none p-2 text-center bg-[#9c3353] font-bold text-white' : 'block cursor-pointer select-none p-2 text-center'}>Male</label>
                             </div>
                             <div>
-                                <input value="female" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="1" className="hidden peer" />
-                                <label htmlFor="1" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Female</label>
+                                <input value={"Female"} type="radio" name="benefitterGenderChange" id="Female" className="hidden peer" checked={benefitterGender === "Female"} onChange={handleBenefitterGenderChange} />
+                                <label htmlFor="Female" className={(benefitterGender === "Female") ? 'block cursor-pointer select-none p-2 text-center bg-[#9c3353] font-bold text-white' : 'block cursor-pointer select-none p-2 text-center'}>Female</label>
                             </div>
                             <div>
-                                <input value="others" onChange={handleBenefitterGenderChange} type="radio" name="benefitterGenderChange" id="2" className="hidden peer" />
-                                <label htmlFor="2" className="block cursor-pointer select-none p-2 text-center peer-checked:bg-[#9c3353] peer-checked:font-bold peer-checked:text-white">Other</label>
+                                <input value={"Other"} type='radio' name="benefitterGenderChange" id="Other" className="hidden peer" checked={benefitterGender === "Other"} onChange={handleBenefitterGenderChange} />
+                                <label htmlFor="Other" className={(benefitterGender === "Other") ? 'block cursor-pointer select-none p-2 text-center bg-[#9c3353] font-bold text-white' : 'block cursor-pointer select-none p-2 text-center'}>Other</label>
                             </div>
                         </div>
                         <div>& residing in <input value={benefitterAddress} onChange={handleBenefitterAddressChange} type="text" name="benefitterAddress" id="city" className='flex-1 py-0 text-gray-600 border-b-2 border-gray-400 outline-none' /> </div>
@@ -523,7 +574,7 @@ const SetupFundraiser = () => {
                 {benefitter === "others" && <div className='items-center border-solid border-2 border-[#beb0b4] mb-20 rounded-3xl overflow-hidden shadow-2xl'>
                     <div className='p-3 bg-slate-200'>
                         <div className='relative w-20 h-20 m-auto'>
-                            <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage || '/assets/user.png'} alt="Selected" onClick={handleClick} />
+                            <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage1 || '/assets/user.png'} alt="Selected" onClick={handleClick} />
                             <input type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
                             <AiTwotonePlusCircle size={20} className="absolute z-[200]  bottom-1 right-0 m-0 text-[#9c3353]" />
                         </div>
@@ -641,12 +692,12 @@ const SetupFundraiser = () => {
                         <div>
                             <div className="grid w-[12rem] grid-cols-2" x-data="app">
                                 <div>
-                                    <input value="true" onChange={handleIncludeTaxBenefitChange} type="radio" name="includeTaxBenefit" id="Yes" className="hidden peer" />
-                                    <label htmlFor="Yes" className="block p-2 text-center cursor-pointer select-none peer-checked:bg-green-500 peer-checked:font-bold peer-checked:text-white">Yes</label>
+                                    <input value="true" type="radio" name="includeTaxBenefit" id="Yes" className="hidden peer" checked={includeTaxBenefit === "true"} onChange={handleIncludeTaxBenefitChange} />
+                                    <label htmlFor="Yes" className={(includeTaxBenefit == "true") ? "block p-2 text-center cursor-pointer select-none bg-green-500 font-bold text-white" : "block p-2 text-center cursor-pointer select-none"}>Yes</label>
                                 </div>
                                 <div>
-                                    <input value="false" onChange={handleIncludeTaxBenefitChange} type="radio" name="includeTaxBenefit" id="No" className="hidden peer" />
-                                    <label htmlFor="No" className="block p-2 text-center cursor-pointer select-none peer-checked:bg-green-500 peer-checked:font-bold peer-checked:text-white">No</label>
+                                    <input value="false" type="radio" name="includeTaxBenefit" id="No" className="hidden peer" checked={includeTaxBenefit === "false"} onChange={handleIncludeTaxBenefitChange} />
+                                    <label htmlFor="No" className={(includeTaxBenefit == "false") ? "block p-2 text-center cursor-pointer select-none bg-green-500 font-bold text-white" : "block p-2 text-center cursor-pointer select-none"}>No</label>
                                 </div>
                             </div>
                         </div>
@@ -711,12 +762,19 @@ const SetupFundraiser = () => {
                 <div className='text-[#282828] mb-6 border-[1.5px] border-solid border-[#e0e1e3] tracking-widest text-[16px] p-[10px_0] bg-[hsla(210,4%,89%,.2)] w-[200px] text-center '>Elaborate Cause</div>
                 <div className='py-0'>
                     <div className='relative h-[220px] w-[380px] m-auto rounded-xl'>
-                        <img className='p-0 my-2 rounded-xl h-[220px] w-[380px]' src={selectedImage || '/assets/medical.jpg'} alt="Selected" onClick={handleClick} />
-                        <input className='h-[220px] w-[380px]' type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
-                        {selectedImage === null &&
+                        <img className='p-0 my-2 rounded-xl h-[220px] w-[380px]' src={selectedImage2 || '/assets/medical.jpg'} alt="Selected" onClick={handleClick2} />
+                        <input className='h-[220px] w-[380px]' type="file" accept="image/*" ref={inputRef2} onChange={(event) => {
+                                if (event.target.files && event.target.files[0]) {
+                                    const i = event.target.files[0];
+                                    setImage2(i);
+                                    setCreateObjectURL2(URL.createObjectURL(i));
+                                }
+                                handleImageChange2(event);
+                            }} style={{ display: 'none' }} />
+                        {selectedImage2 === null &&
                             <div className='bg-[#9c3353] text-sm py-0.5 px-2 text-white absolute top-[-5px] right-[-20px] rounded-2xl'>Upload Cover Photo</div>
                         }
-                        {selectedImage !== null &&
+                        {selectedImage2 !== null &&
                             <div className="absolute bottom-[-4px] right-[-4px] m-0 bg-[#9c3353] p-2 rounded-full " onClick={handleClick}>
                                 <MdEdit className='text-white' />
                             </div>

@@ -28,6 +28,8 @@ const FundraiseRequestsSchema = new Schema({
     hospitalLocation:{type:String,required:true},
     ailment:{type:String,required:true},
 
+    numberOfDonators:{type:Number,default:0},
+
     coverImg:{type:String,required:true},
     fundraiserTitle:{type: String,required:true},
     fundraiserStory:{type: String},

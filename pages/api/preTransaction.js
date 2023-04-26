@@ -1,8 +1,8 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 console.log(process.env.STRIPE_SECRET_KEY);
 export default async (req, res) => {
+    console.log("first");
     const host = `${process.env.NEXT_PUBLIC_DEPLOYED}`;
-
     const { email, amount, fundraiserTitle } = req.body;
     const transformedItem = ({
         // description: fundraiserTitle,
@@ -12,20 +12,19 @@ export default async (req, res) => {
             unit_amount: amount * 100,
             product_data: {
                 name: fundraiserTitle
-            }
-        },
+            },
+        }
     });
-    console.log(req.body.email);
-    console.log(req.body.amount);
+    console.log("fir");
+
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [transformedItem],
         mode: 'payment',
-        success_url: `${host}/success`,
-        cancel_url: `${host}/cancel`,
+        success_url: `${host}/fundraiser/${fundraiserTitle}`,
+        cancel_url: `${host}/`,
     })
-    console.log("sees",session.url)
-    console.log("seids",session.id)
+    console.log("fir");
     res.status(200).json({id:session.id});
 }
 

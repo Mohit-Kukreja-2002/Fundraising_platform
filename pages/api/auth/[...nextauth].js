@@ -18,7 +18,7 @@
 //     secret: process.env.JWT_SECRET
 // })
 
-// // export default NextAuth(authOptions)
+// export default NextAuth(authOptions)
 import React from 'react'
 
 function NextAuth() {
