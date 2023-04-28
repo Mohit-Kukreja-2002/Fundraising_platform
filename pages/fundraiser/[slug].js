@@ -39,7 +39,7 @@ const Post = ({ fundraiserDetails }) => {
     const handleDonationAnonymousChange = (e) => {
         setDonationAnonymous(checkboxRef.current.checked);
     }
-
+    
     function openModal() {
         setIsOpen(true);
     }
@@ -52,7 +52,7 @@ const Post = ({ fundraiserDetails }) => {
         if (localStorage.getItem("paymentInitiated") == "true") {
             toast.success('🦄 Thanks for contributing to this cause', {
                 position: "bottom-center",
-                autoClose: 3000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: false,
@@ -125,10 +125,6 @@ const Post = ({ fundraiserDetails }) => {
         initiatePayment();
     }
 
-    const src1a = `/coverImg/${fundraiserDetails.fundraiserTitle}.png`;
-    const src1b = `/coverImg/${fundraiserDetails.fundraiserTitle}.jpg`;
-    const src1c = `/coverImg/${fundraiserDetails.fundraiserTitle}.jpeg`;
-
     return (
         <>
             <Navbar navtype={"landing"} subpage={"donate"} />
@@ -165,9 +161,7 @@ const Post = ({ fundraiserDetails }) => {
 
                     {/* Image here */}
                     <div className="relative m-0">
-                        <img className="w-[100%] rounded-lg" src={src1a} alt="" />
-                        <img className="w-[100%] rounded-lg" src={src1b} alt="" />
-                        <img className="w-[100%] rounded-lg" src={src1c} alt="" />
+                        <img className="w-[100%] rounded-lg" src={`/coverImg/${fundraiserDetails.fundraiserTitle}.${fundraiserDetails.extension2}`} alt="" />
                     </div>
 
                     {/* progess Bar  and etc */}

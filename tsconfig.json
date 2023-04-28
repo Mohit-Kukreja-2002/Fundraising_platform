@@ -30,7 +30,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/api/auth/fetchUser.js", "pages/api/auth/createUser.js", "pages/signUp.js", "pages/api/FileReader.js", "pages/api/FileReader2.js"  ],
+, "pages/api/auth/fetchUser.js", "pages/api/auth/createUser.js", "pages/signUp.js", "pages/api/FileReader.js", "pages/api/FileReader2.js", "components/CheckIfImageExists.js"  ],
   "exclude": [
     "node_modules"
   ]

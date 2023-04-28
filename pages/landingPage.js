@@ -17,6 +17,10 @@ import 'react-toastify/dist/ReactToastify.css';
 const LandingPage = () => {
     const host = `${process.env.NEXT_PUBLIC_DEPLOYED}`;
     const [data, setData] = useState({});
+    const [data1, setData1] = useState({});
+    const [data2, setData2] = useState({});
+    const [data3, setData3] = useState({});
+    const [search, setSearch] = useState("");
 
     const [isOpen, setIsOpen] = useState(false);
     // const [details, setdetails] = useState({ requesterName: '', requesterPhone: '', requesterfundraise: '', requesterlanguage: '' });
@@ -24,6 +28,7 @@ const LandingPage = () => {
     const [requesterName, setRequesterName] = useState('');
     const [requesterfundraise, setRequesterFundraise] = useState('medical');
     const [requesterlanguage, setRequesterLanguage] = useState('english');
+    const [selected, setSelected] = useState('medical');
 
     const handleNameChange = (event) => {
         setRequesterName(event.target.value);
@@ -37,6 +42,9 @@ const LandingPage = () => {
     const handleLanguageChange = (event) => {
         setRequesterLanguage(event.target.value);
     }
+
+    const [searching, setSearching] = useState(false);
+    const [searchedData, setSearchedData] = useState({});
 
     useEffect(() => {
         if (localStorage.getItem("paymentInitiated") == "true") {
@@ -62,13 +70,29 @@ const LandingPage = () => {
             const json = await response.json();
             // console.log("JSON", json);
             if (json.success) {
+                console.log("data", json.data)
+                console.log("data1", json.data1)
+                console.log("data2", json.data2)
+                console.log("data3", json.data3)
                 setData(JSON.parse(JSON.stringify(json)));
+                setData1(JSON.parse(JSON.stringify(json)));
+                setData2(JSON.parse(JSON.stringify(json)));
+                setData3(JSON.parse(JSON.stringify(json)));
                 // console.log("here", data);
             }
         }
         fetchData();
-    }, [isOpen])
-    let finaldata = data.data;
+    }, [isOpen, selected])
+
+    useEffect(() => {
+
+    }, [search])
+
+
+    let finaldata1 = data.data1;
+    let finaldata2 = data.data2;
+    let finaldata3 = data.data3;
+
 
     function openModal() {
         setIsOpen(true);
@@ -77,12 +101,15 @@ const LandingPage = () => {
     function closeModal() {
         setIsOpen(false);
     }
-    // const changing = (e) => {
-    //     setdetails({ ...details, [e.target.name]: e.target.value });
-    // }
+
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value);
+        if (e.target.value === "") {
+            setSearching(false);
+        }
+    }
 
     const handleSubmit = async (e) => {
-        // setdetails(details.requesterName, details.requesterPhone, details.requesterfundraise, details.requesterlanguage);
         const response = await fetch(`${host}/api/contact`, {
             method: 'POST',
             headers: {
@@ -109,7 +136,29 @@ const LandingPage = () => {
         });
     }
 
-    // const percentage = 90;
+    const [finalSearchedData, setFinalSearchedData] = useState({});
+
+    const Searcher = () => {
+        const fetchData = async () => {
+            const response = await fetch(`${host}/api/getSearchedFundraiser`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ search: search }),
+            });
+            const json = await response.json();
+
+            if (json.success) {
+                console.log("data", json)
+                setSearchedData(JSON.parse(JSON.stringify(json)));
+                setFinalSearchedData(json.data);
+                setSearching(true);
+            }
+        }
+        fetchData();
+    }
+
     return (
         <>
 
@@ -161,29 +210,31 @@ const LandingPage = () => {
                 </div>
 
                 <div className="relative flex justify-center mb-[4rem]">
-                    <input type="text"
+                    <input type="text" onChange={handleSearchChange}
                         className="inline-block min-h-[auto] w-[40%] rounded-tl-full rounded-bl-full border-2 bg-transparent py-[0.32rem] px-5 leading-[2.15] outline-none border-[#9c3353] shadow-[0_0_30px_0_rgba(156,51,83,0.2)]"
-                        id="email" name='email' placeholder="Search by fundraiser name, title, location, cause or other keywords" />
-                    <button className='bg-[#9c3353] px-4 rounded-tr-full rounded-br-full'>
+                        value={search}
+                        id="search" name='search' placeholder="Search by fundraiser name, title, location, cause or other keywords" />
+                    <button onClick={Searcher} className='bg-[#9c3353] px-4 rounded-tr-full rounded-br-full'>
                         <AiOutlineSearch color='white' size={30} />
                     </button>
                 </div>
                 <div className='flex justify-center mb-10'>
-                    <div className='flex flex-col justify-center items-center h-[150px] w-[200px] hover:bg-[#691a47] mx-2 shadow-[0_0_30px_0_rgba(156,51,83,0.2)] rounded-md hover:text-white text-[15px] font-semibold peer'><FaStethoscope size={50} className='my-4 peer-hover:text-white' /> Medical</div>
-                    <div className='flex flex-col justify-center items-center h-[150px] w-[200px] hover:bg-[#691a47] mx-2 shadow-[0_0_30px_0_rgba(156,51,83,0.2)] rounded-md hover:text-white text-[15px] font-semibold peer'><GiCandleLight size={50} className='my-4 peer-hover:text-white' /> Memorial</div>
-                    <div className='flex flex-col justify-center items-center h-[150px] w-[200px] hover:bg-[#691a47] mx-2 shadow-[0_0_30px_0_rgba(156,51,83,0.2)] rounded-md hover:text-white text-[15px] font-semibold peer'><FaHandHoldingHeart size={50} className='my-4 peer-hover:text-white' /> Non-Profit</div>
+                    <div onClick={() => { setSelected("medical") }} className={`flex flex-col ${selected === "medical" ? "bg-[#691a47] text-white" : "text-black bg-white"} justify-center items-center h-[150px] w-[200px] mx-2 shadow-[0_0_30px_0_rgba(156,51,83,0.2)] rounded-md text-[15px] font-semibold peer`}><FaStethoscope size={50} className={`my-4 ${selected === "medical" ? "text-white" : "text-black"}`} /> Medical</div>
+                    <div onClick={() => { setSelected("memorial") }} className={`flex flex-col ${selected === "memorial" ? "bg-[#691a47] text-white" : "text-black bg-white"} justify-center items-center h-[150px] w-[200px] mx-2 shadow-[0_0_30px_0_rgba(156,51,83,0.2)] rounded-md text-[15px] font-semibold peer`}><GiCandleLight size={50} className={`my-4 ${selected === "memorial" ? "text-white" : "text-black"}`} /> Memorial</div>
+                    <div onClick={() => { setSelected("non-profit") }} className={`flex flex-col ${selected === "non-profit" ? "bg-[#691a47] text-white" : "text-black bg-white"} justify-center items-center h-[150px] w-[200px] mx-2 shadow-[0_0_30px_0_rgba(156,51,83,0.2)] rounded-md text-[15px] font-semibold peer`}><FaHandHoldingHeart size={50} className={`my-4 ${selected === "non-profit" ? "text-white" : "text-black"}`} /> Non-Profit</div>
                 </div>
 
                 {/* Cards */}
                 <div className='relative flex flex-wrap mx-[130px] justify-center'>
-                    {finaldata && finaldata.map((item) => {
+                    {searching && finalSearchedData && finalSearchedData.slice(0, 6).map((item) => {
                         return (
                             <div key={item._id} className="cursor-pointer mx-3 mb-5 h-[530px] hover:shadow-[0_0_20px_0_rgba(156,51,83,0.3)] shadow-[0_0_30px_0_rgba(156,51,83,0.2)] w-[30%] bg-white border border-gray-200 rounded-lg relative">
                                 <Link href={`/fundraiser/${item.slug}`}>
                                     {item.includeTaxBenefit === "true" &&
                                         <div className="absolute top-0 left-[-5px] px-2 py-1 bg-[#9c3353] text-white rounded-tr-lg rounded-bl-lg transform overflow-hidden">Tax Benefit</div>
                                     }
-                                    <img className="w-[100%] rounded-t-lg" src="https://cimages.milaap.org/milaap/image/upload/c_fill,h_452,w_603/v1679944130/production/images/campaign/639821/A7852872-9C10-4830-9813-12066662E039_ahi9m1_1679944133.jpg" alt="" />
+
+                                    <img className="w-[100%] aspect-[1.33] rounded-t-lg" src={`/coverImg/${item.fundraiserTitle}.${item.extension2}`} alt="" />
                                     <div className="px-5 mb-5 h-[50px] mt-[20px]">
                                         <h5 className="h-[50px] text-[1.3rem] font-[500] tracking-tight text-gray-500">{item.fundraiserTitle}</h5>
                                     </div>
@@ -211,6 +262,120 @@ const LandingPage = () => {
                             </div>
                         );
                     })}
+                    {!searching && selected === "medical" && finaldata1 && finaldata1.slice(0, 6).map((item) => {
+                        return (
+                            <div key={item._id} className="cursor-pointer mx-3 mb-5 h-[530px] hover:shadow-[0_0_20px_0_rgba(156,51,83,0.3)] shadow-[0_0_30px_0_rgba(156,51,83,0.2)] w-[30%] bg-white border border-gray-200 rounded-lg relative">
+                                <Link href={`/fundraiser/${item.slug}`}>
+                                    {item.includeTaxBenefit === "true" &&
+                                        <div className="absolute top-0 left-[-5px] px-2 py-1 bg-[#9c3353] text-white rounded-tr-lg rounded-bl-lg transform overflow-hidden">Tax Benefit</div>
+                                    }
+
+                                    <img className="w-[100%] aspect-[1.33] rounded-t-lg" src={`/coverImg/${item.fundraiserTitle}.${item.extension2}`} alt="" />
+                                    <div className="px-5 mb-5 h-[50px] mt-[20px]">
+                                        <h5 className="h-[50px] text-[1.3rem] font-[500] tracking-tight text-gray-500">{item.fundraiserTitle}</h5>
+                                    </div>
+
+                                    <div className='flex pl-5 h-[90px]'>
+                                        <div> <CircularProgressBar percentage={Math.ceil(100 * (item.amountRaised / item.amountRequired)) <= 100 ? Math.ceil(100 * (item.amountRaised / item.amountRequired)) : 100} /> </div>
+                                        <div className='mt-4'>
+                                            <p className='text-[#71737B] text-sm font-bold'>Raised</p>
+                                            <p className='mt-1 text-xl'>₹{item.amountRaised}</p>
+                                        </div>
+                                        <div className='relative flex mx-auto before:bg-[#dde0e0] before:content-[""] before:absolute before:h-[30%] before:w-[2px] before:left-[-12px] before:top-[26px]'>
+                                            <div className='mt-5'>
+                                                <p className='text-[#71737B] text-xs'>Created By</p>
+                                                <p className='mt-1 text-[#53545a] text-sm'>{item.createdBy}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className={`ml-5 mr-6 ${item.includeTaxBenefit === "true" ? "bg-[#f7f7f7]" : ""} h-[55px] text-[#2b2b35] p-2`}>
+                                        {item.includeTaxBenefit === "true" &&
+                                            <p className='relative before:absolute before:content-[""] before:bg-[#691a47] text-sm ml-2 before:h-[136%] before:top-[-8px] before:w-[4px] before:left-[-16px]'>Recieve Tax benefit by contributing to this cause.</p>
+                                        }
+                                    </div>
+                                </Link>
+                            </div>
+                        );
+                    })}
+                    {!searching && selected === "memorial" && finaldata2 && finaldata2.slice(0, 6).map((item) => {
+                        return (
+                            <div key={item._id} className="cursor-pointer mx-3 mb-5 h-[530px] hover:shadow-[0_0_20px_0_rgba(156,51,83,0.3)] shadow-[0_0_30px_0_rgba(156,51,83,0.2)] w-[30%] bg-white border border-gray-200 rounded-lg relative">
+                                <Link href={`/fundraiser/${item.slug}`}>
+                                    {item.includeTaxBenefit === "true" &&
+                                        <div className="absolute top-0 left-[-5px] px-2 py-1 bg-[#9c3353] text-white rounded-tr-lg rounded-bl-lg transform overflow-hidden">Tax Benefit</div>
+                                    }
+
+                                    <img className="w-[100%] aspect-[1.33] rounded-t-lg" src={`/coverImg/${item.fundraiserTitle}.${item.extension2}`} alt="" />
+                                    <div className="px-5 mb-5 h-[50px] mt-[20px]">
+                                        <h5 className="h-[50px] text-[1.3rem] font-[500] tracking-tight text-gray-500">{item.fundraiserTitle}</h5>
+                                    </div>
+
+                                    <div className='flex pl-5 h-[90px]'>
+                                        <div> <CircularProgressBar percentage={Math.ceil(100 * (item.amountRaised / item.amountRequired)) <= 100 ? Math.ceil(100 * (item.amountRaised / item.amountRequired)) : 100} /> </div>
+                                        <div className='mt-4'>
+                                            <p className='text-[#71737B] text-sm font-bold'>Raised</p>
+                                            <p className='mt-1 text-xl'>₹{item.amountRaised}</p>
+                                        </div>
+                                        <div className='relative flex mx-auto before:bg-[#dde0e0] before:content-[""] before:absolute before:h-[30%] before:w-[2px] before:left-[-12px] before:top-[26px]'>
+                                            <div className='mt-5'>
+                                                <p className='text-[#71737B] text-xs'>Created By</p>
+                                                <p className='mt-1 text-[#53545a] text-sm'>{item.createdBy}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className={`ml-5 mr-6 ${item.includeTaxBenefit === "true" ? "bg-[#f7f7f7]" : ""} h-[55px] text-[#2b2b35] p-2`}>
+                                        {item.includeTaxBenefit === "true" &&
+                                            <p className='relative before:absolute before:content-[""] before:bg-[#691a47] text-sm ml-2 before:h-[136%] before:top-[-8px] before:w-[4px] before:left-[-16px]'>Recieve Tax benefit by contributing to this cause.</p>
+                                        }
+                                    </div>
+                                </Link>
+                            </div>
+                        );
+                    })}
+                    {!searching && selected === "non-profit" && finaldata3 && finaldata3.slice(0, 6).map((item) => {
+                        return (
+                            <div key={item._id} className="cursor-pointer mx-3 mb-5 h-[530px] hover:shadow-[0_0_20px_0_rgba(156,51,83,0.3)] shadow-[0_0_30px_0_rgba(156,51,83,0.2)] w-[30%] bg-white border border-gray-200 rounded-lg relative">
+                                <Link href={`/fundraiser/${item.slug}`}>
+                                    {item.includeTaxBenefit === "true" &&
+                                        <div className="absolute top-0 left-[-5px] px-2 py-1 bg-[#9c3353] text-white rounded-tr-lg rounded-bl-lg transform overflow-hidden">Tax Benefit</div>
+                                    }
+
+                                    <img className="w-[100%] aspect-[1.33] rounded-t-lg" src={`/coverImg/${item.fundraiserTitle}.${item.extension2}`} alt="" />
+                                    <div className="px-5 mb-5 h-[50px] mt-[20px]">
+                                        <h5 className="h-[50px] text-[1.3rem] font-[500] tracking-tight text-gray-500">{item.fundraiserTitle}</h5>
+                                    </div>
+
+                                    <div className='flex pl-5 h-[90px]'>
+                                        <div> <CircularProgressBar percentage={Math.ceil(100 * (item.amountRaised / item.amountRequired)) <= 100 ? Math.ceil(100 * (item.amountRaised / item.amountRequired)) : 100} /> </div>
+                                        <div className='mt-4'>
+                                            <p className='text-[#71737B] text-sm font-bold'>Raised</p>
+                                            <p className='mt-1 text-xl'>₹{item.amountRaised}</p>
+                                        </div>
+                                        <div className='relative flex mx-auto before:bg-[#dde0e0] before:content-[""] before:absolute before:h-[30%] before:w-[2px] before:left-[-12px] before:top-[26px]'>
+                                            <div className='mt-5'>
+                                                <p className='text-[#71737B] text-xs'>Created By</p>
+                                                <p className='mt-1 text-[#53545a] text-sm'>{item.createdBy}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className={`ml-5 mr-6 ${item.includeTaxBenefit === "true" ? "bg-[#f7f7f7]" : ""} h-[55px] text-[#2b2b35] p-2`}>
+                                        {item.includeTaxBenefit === "true" &&
+                                            <p className='relative before:absolute before:content-[""] before:bg-[#691a47] text-sm ml-2 before:h-[136%] before:top-[-8px] before:w-[4px] before:left-[-16px]'>Recieve Tax benefit by contributing to this cause.</p>
+                                        }
+                                    </div>
+                                </Link>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className='flex items-center justify-center mt-5 mb-10 underline font-bold text-[20px] text-[#9c3353]'>
+                    <Link href={'/donate'} className='cursor-pointer' >
+                        See more fundraisers
+                    </Link>
                 </div>
 
                 {/* Request a call */}
@@ -306,9 +471,12 @@ export async function getServerSideProps() {
     }
 
     let data = await FundraiseRequests.find({ verified: true });
+    let data1 = await FundraiseRequests.find({ verified: true, category: "medical" });
+    let data2 = await FundraiseRequests.find({ verified: true, category: "memorial" });
+    let data3 = await FundraiseRequests.find({ verified: true, category: { $in: ["others", "education"] } });
     // console.log(data);
     return {
-        props: { data }, // will be passed to the page component as props
+        props: { data, data1, data2, data3 }, // will be passed to the page component as props
     };
 }
 

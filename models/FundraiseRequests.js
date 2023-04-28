@@ -30,6 +30,9 @@ const FundraiseRequestsSchema = new Schema({
 
     numberOfDonators:{type:Number,default:0},
 
+    extension1:{type:String,default:"jpg"},
+    extension2:{type:String,default:"jpg"},
+
     coverImg:{type:String,required:true},
     fundraiserTitle:{type: String,required:true},
     fundraiserStory:{type: String},

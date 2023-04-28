@@ -18,8 +18,7 @@ function Navbar({ navtype="landing",count=1,subpage="home" }) {
                         <div className='ml-8 w-[50%]'>
                             <ul className='flex'>
                                 <li className={` ${subpage==="home"?"bg-[#9c3353] text-[#ffc1d3]":"hover:bg-[#f5f5f5] text-[#212121] bg-white"} mr-1 px-4 pb-[24.2px] pt-[22px]`}><Link href={'/'}>Home</Link></li>
-                                <li className={` ${subpage==="donate"?"bg-[#9c3353] text-[#ffc1d3]":"hover:bg-[#f5f5f5] text-[#212121] bg-white"} mr-1 px-4 pb-[24.2px] pt-[22px]`}><Link href={'/'}>Donate</Link></li>
-                                <li className={` ${subpage==="lend"?"bg-[#9c3353] text-[#ffc1d3]":"hover:bg-[#f5f5f5] text-[#212121] bg-white"} mr-1 px-4 pb-[24.2px] pt-[22px]`}><Link href={'/'}>Lend</Link></li>
+                                <li className={` ${subpage==="donate"?"bg-[#9c3353] text-[#ffc1d3]":"hover:bg-[#f5f5f5] text-[#212121] bg-white"} mr-1 px-4 pb-[24.2px] pt-[22px]`}><Link href={'/donate'}>Donate</Link></li>
                                 <li className={` ${subpage==="contact"?"bg-[#9c3353] text-[#ffc1d3]":"hover:bg-[#f5f5f5] text-[#212121] bg-white"} mr-1 px-4 pb-[24.2px] pt-[22px]`}><Link href={'/contactUs'}>Contact Us</Link></li>
                             </ul>
                         </div>

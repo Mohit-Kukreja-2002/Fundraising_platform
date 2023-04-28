@@ -39,6 +39,9 @@ const handler = async (req, res) => {
       benefitterAddress: req.body.benefitterAddress,
       benefitterContact: req.body.benefitterContact,
 
+      extension1:req.body.extension1,
+      extension2:req.body.extension2,
+
       amountRequired: req.body.amountRequired,
       amountRaised: req.body.amountRaised,
 

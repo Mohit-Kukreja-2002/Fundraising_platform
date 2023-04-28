@@ -27,7 +27,7 @@ const SetupFundraiser = () => {
     const [image1, setImage1] = useState(null);
     const [createObjectURL1, setCreateObjectURL1] = useState(null);
     const [image2, setImage2] = useState(null);
-    const [createObjectURL2, setCreateObjectURL2] = useState(null);    
+    const [createObjectURL2, setCreateObjectURL2] = useState(null);
 
     // Variables
     const divref = useRef(null);
@@ -64,6 +64,8 @@ const SetupFundraiser = () => {
     const [coverImg, setCoverImg] = useState("ok");
     const [fundraiserTitle, setFundraiserTitle] = useState("");
     const [fundraiserStory, setFundraiserStory] = useState("");
+    const [extension1, setExtension1] = useState("");
+    const [extension2, setExtension2] = useState("");
 
     const uploadToServer1 = async (imgName) => {
         const body = new FormData();
@@ -87,6 +89,7 @@ const SetupFundraiser = () => {
     };
 
     useEffect(() => { }, [cause])
+    // useEffect(() => {console.log("extension updated",extension1) }, [])
 
     const handleClick = () => { inputRef.current.click(); };
     const handleClick1 = () => { inputRef1.current.click(); };
@@ -109,9 +112,12 @@ const SetupFundraiser = () => {
     };
 
     const handleImageChange1 = (event) => {
+        console.log(((event.target.files[0].name).split('.')).pop());
+        setExtension1(((event.target.files[0].name).split('.')).pop());
         setSelectedImage1(URL.createObjectURL(event.target.files[0]));
     }
     const handleImageChange2 = (event) => {
+        setExtension2(((event.target.files[0].name).split('.')).pop());
         setSelectedImage2(URL.createObjectURL(event.target.files[0]));
     }
 
@@ -195,7 +201,7 @@ const SetupFundraiser = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ category: cause, createdBy: createdBy, creatorMail: creatorMail, creatorImg: creatorImg, benefitterCreatorRelation: benefitter, benefitterName: benefitterName, benefitterAge: benefitterAge, benefitterGender: benefitterGender, benefitterAddress: benefitterAddress, benefitterContact: benefitterContact, amountRequired: amountRequired, amountRaised: amountRaised, endDateToRaise: endDateToRaise, includeTaxBenefit: includeTaxBenefit, hospitalName: hospitalName, hospitalLocation: hospitalLocation, ailment: ailment, coverImg: coverImg, fundraiserTitle: fundraiserTitle, fundraiserStory: fundraiserStory }),
+                body: JSON.stringify({ category: cause, createdBy: createdBy, creatorMail: creatorMail, creatorImg: creatorImg, benefitterCreatorRelation: benefitter, benefitterName: benefitterName, benefitterAge: benefitterAge, benefitterGender: benefitterGender, benefitterAddress: benefitterAddress, benefitterContact: benefitterContact, amountRequired: amountRequired, amountRaised: amountRaised, endDateToRaise: endDateToRaise, includeTaxBenefit: includeTaxBenefit, hospitalName: hospitalName, hospitalLocation: hospitalLocation, ailment: ailment, coverImg: coverImg, fundraiserTitle: fundraiserTitle, fundraiserStory: fundraiserStory, extension1:extension1,extension2:extension2 }),
             });
             const json = await response.json();
             console.log("Processing the fundraise request", json);
@@ -210,6 +216,7 @@ const SetupFundraiser = () => {
             setAmountRaised(0); setAmountRequired(""); setEndDateToRaise("");
             setIncludeTaxBenefit("false"); setHospitalLocation(""); setHospitalName("");
             setAilment(""); setCoverImg("h"); setFundraiserStory("h");
+            setExtension1("jpg");setExtension2("jpg");
 
             // setFundraiserTitle("");
 
@@ -475,7 +482,14 @@ const SetupFundraiser = () => {
                     <div className='p-3 bg-slate-200'>
                         <div className='relative w-20 h-20 m-auto'>
                             <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage1 || '/assets/user.png'} alt="Selected" onClick={handleClick} />
-                            <input type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
+                            <input type="file" accept="image/*" ref={inputRef1} onChange={(event) => {
+                                if (event.target.files && event.target.files[0]) {
+                                    const i = event.target.files[0];
+                                    setImage1(i);
+                                    setCreateObjectURL1(URL.createObjectURL(i));
+                                }
+                                handleImageChange1(event);
+                            }} style={{ display: 'none' }} />
                             <AiTwotonePlusCircle size={20} className="absolute z-[200]  bottom-1 right-0 m-0 text-[#9c3353]" />
                         </div>
                     </div>
@@ -524,7 +538,14 @@ const SetupFundraiser = () => {
                     <div className='p-3 bg-slate-200'>
                         <div className='relative w-20 h-20 m-auto'>
                             <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage1 || '/assets/user.png'} alt="Selected" onClick={handleClick} />
-                            <input type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
+                            <input type="file" accept="image/*" ref={inputRef1} onChange={(event) => {
+                                if (event.target.files && event.target.files[0]) {
+                                    const i = event.target.files[0];
+                                    setImage1(i);
+                                    setCreateObjectURL1(URL.createObjectURL(i));
+                                }
+                                handleImageChange1(event);
+                            }} style={{ display: 'none' }} />
                             <AiTwotonePlusCircle size={20} className="absolute z-[200]  bottom-1 right-0 m-0 text-[#9c3353]" />
                         </div>
                     </div>
@@ -575,7 +596,14 @@ const SetupFundraiser = () => {
                     <div className='p-3 bg-slate-200'>
                         <div className='relative w-20 h-20 m-auto'>
                             <img className='rounded-full h-20 w-20 border-[#beb0b4] border-solid border-2 border-rounded p-0' src={selectedImage1 || '/assets/user.png'} alt="Selected" onClick={handleClick} />
-                            <input type="file" accept="image/*" ref={inputRef} onChange={handleImageChange} style={{ display: 'none' }} />
+                            <input type="file" accept="image/*" ref={inputRef1} onChange={(event) => {
+                                if (event.target.files && event.target.files[0]) {
+                                    const i = event.target.files[0];
+                                    setImage1(i);
+                                    setCreateObjectURL1(URL.createObjectURL(i));
+                                }
+                                handleImageChange1(event);
+                            }} style={{ display: 'none' }} />
                             <AiTwotonePlusCircle size={20} className="absolute z-[200]  bottom-1 right-0 m-0 text-[#9c3353]" />
                         </div>
                     </div>
@@ -764,13 +792,13 @@ const SetupFundraiser = () => {
                     <div className='relative h-[220px] w-[380px] m-auto rounded-xl'>
                         <img className='p-0 my-2 rounded-xl h-[220px] w-[380px]' src={selectedImage2 || '/assets/medical.jpg'} alt="Selected" onClick={handleClick2} />
                         <input className='h-[220px] w-[380px]' type="file" accept="image/*" ref={inputRef2} onChange={(event) => {
-                                if (event.target.files && event.target.files[0]) {
-                                    const i = event.target.files[0];
-                                    setImage2(i);
-                                    setCreateObjectURL2(URL.createObjectURL(i));
-                                }
-                                handleImageChange2(event);
-                            }} style={{ display: 'none' }} />
+                            if (event.target.files && event.target.files[0]) {
+                                const i = event.target.files[0];
+                                setImage2(i);
+                                setCreateObjectURL2(URL.createObjectURL(i));
+                            }
+                            handleImageChange2(event);
+                        }} style={{ display: 'none' }} />
                         {selectedImage2 === null &&
                             <div className='bg-[#9c3353] text-sm py-0.5 px-2 text-white absolute top-[-5px] right-[-20px] rounded-2xl'>Upload Cover Photo</div>
                         }
