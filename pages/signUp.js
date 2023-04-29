@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { BsFacebook, BsTwitter } from 'react-icons/bs';
 import { FcGoogle } from 'react-icons/fc';
 import { useRouter } from 'next/router';
-import {useSession,signIn} from 'next-auth/react'
+// import {useSession,signIn} from 'next-auth/react'
 
 function SignUp(){
 
-    const {data:session}=useSession();
+    // const {data:session}=useSession();
     // console.log(session);
     // const host=`http://${process.env.NEXT_PUBLIC_WEB_HOST}:${process.env.NEXT_PUBLIC_WEB_PORT}`
     
@@ -36,7 +36,8 @@ function SignUp(){
         const json = await response.json();
         if (json.success) {
             localStorage.setItem('token', json.authtoken);
-            router.push(`${host}/loggedPage`);
+            localStorage.setItem('email', email);
+            router.push(`${host}/landingPage`);
         }
         else {
             
@@ -58,7 +59,8 @@ function SignUp(){
                                     <BsFacebook size={100} className="mx-1 h-9 w-9 text-[#0066ff]  rounded-full shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:text-[blue] hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:text-[blue] focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:text-[#0000ffbe] active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)" />
                                 </Link>
                                 <Link href={'/'}>
-                                    <FcGoogle onClick={()=>signIn()} size={100} className="mx-1 h-9 w-9 rounded-full shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)" />
+                                    {/* <FcGoogle onClick={()=>signIn()} size={100} className="mx-1 h-9 w-9 rounded-full shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)" /> */}
+                                    <FcGoogle size={100} className="mx-1 h-9 w-9 rounded-full shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)" />
                                 </Link>
                                 <Link href={'/'}>
                                     <BsTwitter size={100} className="mx-1 h-9 w-9 text-[#0066ff]  rounded-full shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:text-[blue] hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:text-[blue] focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:text-[#0000ffbe] active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)" />

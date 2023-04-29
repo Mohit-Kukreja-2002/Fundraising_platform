@@ -14,7 +14,10 @@ import mongoose from "mongoose";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const LandingPage = () => {
+    let [loggedStatus,setLoggedStatus]=useState(false);
+
     const host = `${process.env.NEXT_PUBLIC_DEPLOYED}`;
     const [data, setData] = useState({});
     const [data1, setData1] = useState({});
@@ -23,7 +26,6 @@ const LandingPage = () => {
     const [search, setSearch] = useState("");
 
     const [isOpen, setIsOpen] = useState(false);
-    // const [details, setdetails] = useState({ requesterName: '', requesterPhone: '', requesterfundraise: '', requesterlanguage: '' });
     const [requesterPhone, setRequesterPhone] = useState('');
     const [requesterName, setRequesterName] = useState('');
     const [requesterfundraise, setRequesterFundraise] = useState('medical');
@@ -47,6 +49,15 @@ const LandingPage = () => {
     const [searchedData, setSearchedData] = useState({});
 
     useEffect(() => {
+        if (localStorage.getItem('token')) {
+            setLoggedStatus(true);
+            console.log("setting true",loggedStatus)
+        } else {
+            setLoggedStatus(false);
+            console.log("setting false",loggedStatus)
+        }
+
+
         if (localStorage.getItem("paymentInitiated") == "true") {
             toast.error('⚠ Payment Failed! Please Try Again...', {
                 position: "bottom-center",
@@ -158,11 +169,10 @@ const LandingPage = () => {
         }
         fetchData();
     }
-
     return (
         <>
-
-            <Navbar navtype={"landing"} />
+            {console.log("herere",loggedStatus)}
+            <Navbar navtype={"landing"} loginStatus={loggedStatus} />
             <ToastContainer
                 position="bottom-center"
                 autoClose={3000}
@@ -466,17 +476,19 @@ const LandingPage = () => {
 }
 
 export async function getServerSideProps() {
+
     if (!mongoose.connections[0].readystate) {
         await mongoose.connect(process.env.MONGO_URI);
     }
 
     let data = await FundraiseRequests.find({ verified: true });
-    let data1 = await FundraiseRequests.find({ verified: true, category: "medical" });
-    let data2 = await FundraiseRequests.find({ verified: true, category: "memorial" });
-    let data3 = await FundraiseRequests.find({ verified: true, category: { $in: ["others", "education"] } });
+    let ans = JSON.stringify(data)
+    // let data1 = await FundraiseRequests.find({ verified: true, category: "medical" });
+    // let data2 = await FundraiseRequests.find({ verified: true, category: "memorial" });
+    // let data3 = await FundraiseRequests.find({ verified: true, category: { $in: ["others", "education"] } });
     // console.log(data);
     return {
-        props: { data, data1, data2, data3 }, // will be passed to the page component as props
+        props: { ans }, // will be passed to the page component as props
     };
 }
 

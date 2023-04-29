@@ -43,7 +43,7 @@ const handler = async (req, res) => {
 
     const data = {user: {id: user.id,},};
     const authtoken = jwt.sign(data, JWT_SECRET);
-    res.json({success:true,authtoken });
+    res.json({success:true,authtoken,user,data });
   } 
   catch (error) {
     console.error(error.message);

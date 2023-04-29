@@ -4,7 +4,7 @@ import { FcGoogle } from 'react-icons/fc';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-function SignIn() {
+function SignIn({logged}) {
     // const host=`http://${process.env.NEXT_PUBLIC_WEB_HOST}:${process.env.NEXT_PUBLIC_WEB_PORT}`
     const host=`${process.env.NEXT_PUBLIC_DEPLOYED}`;
     const router=useRouter();
@@ -24,8 +24,8 @@ function SignIn() {
         const json = await response.json();
         if (json.success) {
             localStorage.setItem('token', json.authtoken);
-            router.push(`${host}/loggedPage`)
-            // setstatus("true");
+            localStorage.setItem('email', email);
+            router.push(`${host}/landingPage`)
             console.log(json)
         }
         else {
